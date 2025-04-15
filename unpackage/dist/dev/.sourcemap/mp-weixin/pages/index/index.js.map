@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sources":["D:/uniapp/HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvaW5kZXgvaW5kZXgudnVl"],"sourcesContent":["import MiniProgramPage from 'C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/index/index.vue'\nwx.createPage(MiniProgramPage)"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;AACA,GAAG,WAAW,eAAe;"}
