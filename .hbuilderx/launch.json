@@ -4,6 +4,16 @@
         {
             "playground" : "standard",
             "type" : "uni-app:app-android"
+        },
+        {
+            "app-plus" : {
+                "launchtype" : "local"
+            },
+            "default" : {
+                "launchtype" : "local"
+            },
+            "provider" : "alipay",
+            "type" : "uniCloud"
         }
     ]
 }

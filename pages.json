@@ -1,9 +1,45 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "uni-app"
+			"path" : "pages/Index/Index",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/Project/ProjectList",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/Project/ProjectDetail",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/User/User",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/User/AboutUs",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/User/Login",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
 			}
 		}
 	],
@@ -13,5 +49,31 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
-	"uniIdRouter": {}
+	"uniIdRouter": {},
+	"tabBar": {
+	    "color": "#8a8a8a",
+	    "selectedColor": "#1296db",
+	    "backgroundColor": "#FFFFFF",
+	    "borderStyle": "black",
+	    "list": [
+	      {
+	        "pagePath": "pages/Index/Index",
+	        "text": "首页",
+	        "iconPath": "/static/tabbar/map-off.png",
+	        "selectedIconPath": "/static/tabbar/map-on.png"
+	      },
+	      {
+	        "pagePath": "pages/Project/ProjectList",
+	        "text": "项目",
+	        "iconPath": "/static/tabbar/project-off.png",
+	        "selectedIconPath": "/static/tabbar/project-on.png"
+	      },
+	      {
+	        "pagePath": "pages/User/User",
+	        "text": "我的",
+	        "iconPath": "/static/tabbar/user-off.png",
+	        "selectedIconPath": "/static/tabbar/user-on.png"
+	      }
+	    ]
+	}
 }
