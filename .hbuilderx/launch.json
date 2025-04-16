@@ -15,6 +15,9 @@
             "h5" : {
                 "launchtype" : "local"
             },
+            "mp-weixin" : {
+                "launchtype" : "local"
+            },
             "provider" : "alipay",
             "type" : "uniCloud"
         }
