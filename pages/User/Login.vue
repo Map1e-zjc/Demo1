@@ -2,50 +2,34 @@
   <view class="login-container">
     <view class="logo"></view>
     <text class="title">瓯域产业云招商</text>
-    
+
     <form class="login-form" @submit="handleLogin">
       <view class="input-item">
-        <input 
-          v-model="form.account" 
-          placeholder="请输入账号" 
-          class="custom-input"
-          placeholder-class="placeholder-style"
-        />
-      </view>
-      
-      <view class="input-item">
-        <input
-          v-model="form.password"
-          type="password"
-          placeholder="请输入密码"
-          class="custom-input"
-          placeholder-class="placeholder-style"
-        />
+        <input v-model="form.account" placeholder="请输入账号" class="custom-input" placeholder-class="placeholder-style" />
       </view>
 
-      <button 
-		v-if="!isLogin"
-        form-type="submit" 
-        class="login-btn" 
-        :disabled="!form.account || !form.password">
+      <view class="input-item">
+        <input v-model="form.password" type="password" placeholder="请输入密码" class="custom-input"
+          placeholder-class="placeholder-style" />
+      </view>
+
+      <button v-if="!isLogin" form-type="submit" class="login-btn" :disabled="!form.account || !form.password">
         管理员登录
       </button>
-	  <button 
-		@tap="exitManager"
-		v-if="isLogin"
-		class="exit-btn">
-	    退出管理员模式
-	  </button>
+      <button @tap="exitManager" v-if="isLogin" class="exit-btn">
+        退出管理员模式
+      </button>
     </form>
   </view>
 </template>
 
 <script>
+const app = getApp()
 export default {
-  const app = getApp()
+
   data() {
     return {
-	  isLogin:false,
+      isLogin: false,
       form: {
         account: '',
         password: ''
@@ -53,60 +37,54 @@ export default {
     }
   },
   methods: {
-	onload()
-	{
-		
-	},
-	onpageshow()
-	{
-		if(app.globalData.isLogin == undefined) this.isLogin = false, app.globalData.isLogin = false;
-		else this.isLogin = app.globalData.isLogin;
-	},
-	exitManager()
-	{
-		uni.showToast({
-			title: '退出成功，已恢复游客身份',
-			icon: 'none'
-		});
-		app.globalData.isLogin = false;
-		this.isLogin = false;
-	},
-	async handleLogin()
-	{
-		try {
-			const res = await uniCloud.callFunction({
-				name: 'db-query',
-				data: {
-					collectionName:'User_data',
-					query:{
-					  account:this.form.account,
-					  password:this.form.password,
-					}
-				}
-			})
-			if(res.result.code == 200)
-			{
-				uni.showToast({
-					title: '登录成功，已获得管理员权限',
-					icon: 'none'
-				});
-				this.isLogin = true;
-				app.globalData.isLogin = true;
-				const user = {};
-				user.account = this.form.account,
-				user.password = this.form.password,
-				uni.setStorageSync('User_data',user);
-			}
-		} catch (err) 
-		{
-			console.log(this.isLogin)
-			console.log(err)
-		}
-	},
-    navigateToBack() {
-      uni.navigateTo({
-        url: '/pages/User/User'
-      })
+    onload() {
+
+    },
+    onpageshow() {
+      if (app.globalData.isLogin == undefined) this.isLogin = false, app.globalData.isLogin = false;
+      else this.isLogin = app.globalData.isLogin;
+    },
+    exitManager() {
+      uni.showToast({
+        title: '退出成功，已恢复游客身份',
+        icon: 'none'
+      });
+      app.globalData.isLogin = false;
+      this.isLogin = false;
+    },
+    async handleLogin() {
+      try {
+        const res = await uniCloud.callFunction({
+          name: 'db-query',
+          data: {
+            collectionName: 'User_data',
+            query: {
+              account: this.form.account,
+              password: this.form.password,
+            }
+          }
+        })
+        if (res.result.code == 200) {
+          uni.showToast({
+            title: '登录成功，已获得管理员权限',
+            icon: 'none'
+          });
+          this.isLogin = true;
+          app.globalData.isLogin = true;
+          const user = {};
+          user.account = this.form.account,
+            user.password = this.form.password,
+            uni.setStorageSync('User_data', user);
+
+          // 登录成功后返回User页面
+          setTimeout(() => {
+            uni.navigateBack();
+          }, 1500);
+        }
+      } catch (err) {
+        console.log(this.isLogin)
+        console.log(err)
+      }
     }
   }
 }
@@ -158,7 +136,8 @@ export default {
   color: #999;
 }
 
-.login-btn, .exit-btn{
+.login-btn,
+.exit-btn {
   width: 100%;
   height: 88rpx;
   background: #2979FF;
@@ -176,7 +155,7 @@ export default {
   position: absolute;
   right: 40rpx;
   font-size: 24rpx;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .guest-link {
