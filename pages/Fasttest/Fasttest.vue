@@ -76,11 +76,20 @@ export default
 						}
 					}
 				});
-				
-				uni.showToast({
-					title: '注册成功',
-					icon: 'success'
-				});
+				if(res.result.code == 200)	
+				{
+					uni.showToast({
+						title: '注册成功',
+						icon: 'success'
+					});
+				}
+				else if(res.result.code == 500)
+				{
+					uni.showToast({
+						title: '同名账号已注册',
+						icon: 'error'
+					});
+				}
 				console.log('用户数据:', res.result);
 			} catch (err) {
 				console.error('注册失败:', err);

@@ -3379,13 +3379,20 @@ ${i3}
               }
             }
           });
-          uni.showToast({
-            title: "注册成功",
-            icon: "success"
-          });
-          formatAppLog("log", "at pages/Fasttest/Fasttest.vue:84", "用户数据:", res.result);
+          if (res.result.code == 200) {
+            uni.showToast({
+              title: "注册成功",
+              icon: "success"
+            });
+          } else if (res.result.code == 500) {
+            uni.showToast({
+              title: "同名账号已注册",
+              icon: "error"
+            });
+          }
+          formatAppLog("log", "at pages/Fasttest/Fasttest.vue:93", "用户数据:", res.result);
         } catch (err) {
-          formatAppLog("error", "at pages/Fasttest/Fasttest.vue:86", "注册失败:", err);
+          formatAppLog("error", "at pages/Fasttest/Fasttest.vue:95", "注册失败:", err);
           uni.showToast({
             title: "注册失败，请重试",
             icon: "none"

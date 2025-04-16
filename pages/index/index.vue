@@ -11,6 +11,7 @@
       include-points="{{polygons[0].points}}"
       show-location
       bindregionchange="onRegionChange"
+	  @tap="handleMapTap" 
     ></map>
   </view>
     <button @click="goToProductDetail" class="btn">快捷操作</button>
