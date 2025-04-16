@@ -25,6 +25,10 @@
       "maxLength": 200,
       "errorMessage": "地址长度需在5-200个字符之间"
     },
+	"image": {
+		"bsonType": "file",
+		"title": "地块照片"
+	},
     "buildings": {
       "bsonType": "array",
       "title": "楼栋列表",
