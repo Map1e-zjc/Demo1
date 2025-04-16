@@ -32,7 +32,7 @@
 			"path" : "pages/User/AboutUs",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationBarTitleText" : "关于我们"
 			}
 		},
 		{
