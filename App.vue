@@ -1,5 +1,9 @@
 <script>
 	export default {
+		globalData: 
+		{
+		    isLogin:false,
+		},
 		onLaunch: function() {
 			console.log('App Launch')
 		},

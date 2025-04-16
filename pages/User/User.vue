@@ -28,7 +28,7 @@ export default {
 	},
 	goSomewhere2() {
 		uni.navigateTo({
-			url: "/pages/User/AboutUs"
+			url: "/pages/User/Login"
 		})
 	},
 	goAboutUs() {

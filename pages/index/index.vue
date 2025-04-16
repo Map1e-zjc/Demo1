@@ -13,7 +13,7 @@
       bindregionchange="onRegionChange"
     ></map>
   </view>
-    <button @click="goToProductDetail" class="btn">关于我们</button>
+    <button @click="goToProductDetail" class="btn">快捷操作</button>
 </template>
 
 <script>
@@ -58,7 +58,7 @@ export default {
     },
 	goToProductDetail() {
 		uni.navigateTo({
-			url:'/pages/User/Login'
+			url:'/pages/Fasttest/Fasttest'
 		})
 	}
   }
