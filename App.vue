@@ -1,11 +1,6 @@
 <script>
 	export default {
-		globalData: 
-		{
-		    isLogin:false,
-		},
 		onLaunch: function() {
-			const app = getApp();
 			console.log('App Launch')
 		},
 		onShow: function() {

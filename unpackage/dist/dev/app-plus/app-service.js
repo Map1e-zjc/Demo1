@@ -131,6 +131,13 @@ if (uni.restoreGlobal) {
     return vue.openBlock(), vue.createElementBlock("view");
   }
   const PagesProjectProjectDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/Project/ProjectDetail.vue"]]);
+  function formatAppLog(type, filename, ...args) {
+    if (uni.__log__) {
+      uni.__log__(type, filename, ...args);
+    } else {
+      console[type].apply(console, [...args, filename]);
+    }
+  }
   const _imports_0$1 = "/static/other_icons/admin.png";
   const _imports_1$1 = "/static/other_icons/guest.png";
   const _imports_2$1 = "/static/other_icons/edit.png";
@@ -150,11 +157,15 @@ if (uni.restoreGlobal) {
         });
       },
       getLoginInfo() {
-        this.isLogin = app.globalData.isLogin;
+        const user = uni.getAccountInfoSync("User_data");
+        formatAppLog("log", "at pages/User/User.vue:65", user);
+        if (user != void 0)
+          this.isLogin = true;
+        else
+          this.isLogin = false;
       }
     },
-    onLoad() {
-      getApp();
+    onShow() {
       this.getLoginInfo();
     }
   };
@@ -301,13 +312,6 @@ if (uni.restoreGlobal) {
     ]);
   }
   const PagesUserAboutUs = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["render", _sfc_render$2], ["__scopeId", "data-v-8d6ac655"], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/User/AboutUs.vue"]]);
-  function formatAppLog(type, filename, ...args) {
-    if (uni.__log__) {
-      uni.__log__(type, filename, ...args);
-    } else {
-      console[type].apply(console, [...args, filename]);
-    }
-  }
   const pages = [
     {
       path: "pages/Index/Index",
@@ -680,7 +684,7 @@ if (uni.restoreGlobal) {
   function I(e2) {
     return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
   }
-  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
+  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","10.238.39.19","169.254.241.176","10.218.208.66"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
   let O = "";
   try {
     O = "__UNI__C65CF88";
@@ -3244,31 +3248,28 @@ ${i3}
   const _sfc_main$2 = {
     data() {
       return {
-        isLogin: false,
-        form: {
+        user: {
           account: "",
           password: ""
         }
       };
     },
     methods: {
-      onload() {
-        getApp();
+      onShow() {
+        this.getLoginInfo();
       },
-      onpageshow() {
-        if (app.globalData.isLogin == void 0)
-          this.isLogin = false, app.globalData.isLogin = false;
-        else
-          this.isLogin = app.globalData.isLogin;
+      getLoginInfo() {
+        const user = uni.getStorageSync("User_data");
+        if (user)
+          this.user = user;
       },
       exitManager() {
-        const app2 = getApp();
         uni.showToast({
           title: "退出成功，已恢复游客身份",
           icon: "none"
         });
-        app2.globalData.isLogin = false;
-        this.isLogin = false;
+        this.user = { account: "", password: "" };
+        uni.removeStorageSync("User_data");
       },
       async handleLogin() {
         try {
@@ -3287,11 +3288,14 @@ ${i3}
               title: "登录成功，已获得管理员权限",
               icon: "none"
             });
-            this.isLogin = true;
-            app.globalData.isLogin = true;
+            const user = {
+              account: this.form.account,
+              password: this.form.password
+            };
+            uni.setStorageSync("User_data", user);
+            this.getLoginInfo();
           }
         } catch (err) {
-          formatAppLog("log", "at pages/User/Login.vue:98", this.isLogin);
           formatAppLog("log", "at pages/User/Login.vue:99", err);
         }
       },
@@ -3317,7 +3321,7 @@ ${i3}
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
-                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.form.account = $event),
+                "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => $data.user.account = $event),
                 placeholder: "请输入账号",
                 class: "custom-input",
                 "placeholder-class": "placeholder-style"
@@ -3326,14 +3330,14 @@ ${i3}
               512
               /* NEED_PATCH */
             ), [
-              [vue.vModelText, $data.form.account]
+              [vue.vModelText, $data.user.account]
             ])
           ]),
           vue.createElementVNode("view", { class: "input-item" }, [
             vue.withDirectives(vue.createElementVNode(
               "input",
               {
-                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.form.password = $event),
+                "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => $data.user.password = $event),
                 type: "password",
                 placeholder: "请输入密码",
                 class: "custom-input",
@@ -3343,16 +3347,15 @@ ${i3}
               512
               /* NEED_PATCH */
             ), [
-              [vue.vModelText, $data.form.password]
+              [vue.vModelText, $data.user.password]
             ])
           ]),
-          !$data.isLogin ? (vue.openBlock(), vue.createElementBlock("button", {
+          $data.user.account && $data.user.password ? (vue.openBlock(), vue.createElementBlock("button", {
             key: 0,
             "form-type": "submit",
-            class: "login-btn",
-            disabled: !$data.form.account || !$data.form.password
-          }, " 管理员登录 ", 8, ["disabled"])) : vue.createCommentVNode("v-if", true),
-          $data.isLogin ? (vue.openBlock(), vue.createElementBlock("button", {
+            class: "login-btn"
+          }, " 管理员登录 ")) : vue.createCommentVNode("v-if", true),
+          $data.user.account == "" ? (vue.openBlock(), vue.createElementBlock("button", {
             key: 1,
             onClick: _cache[2] || (_cache[2] = (...args) => $options.exitManager && $options.exitManager(...args)),
             class: "exit-btn"
@@ -3368,7 +3371,9 @@ ${i3}
     data() {
       return {
         isRegistering: false,
-        isRegistered: false
+        isRegistered: false,
+        account: "zhoujiacheng",
+        password: "123456"
       };
     },
     methods: {
@@ -3379,8 +3384,8 @@ ${i3}
             data: {
               collectionName: "User_data",
               query: {
-                account: "zhoujiacheng",
-                password: "123456"
+                account: this.account,
+                password: this.password
               }
             }
           });
@@ -3420,8 +3425,8 @@ ${i3}
             data: {
               collectionName: "User_data",
               data: {
-                account: "zhoujiacheng",
-                password: "123456"
+                account: this.password,
+                password: this.password
               }
             }
           });
@@ -3436,9 +3441,9 @@ ${i3}
               icon: "error"
             });
           }
-          formatAppLog("log", "at pages/Fasttest/Fasttest.vue:93", "用户数据:", res.result);
+          formatAppLog("log", "at pages/Fasttest/Fasttest.vue:97", "用户数据:", res.result);
         } catch (err) {
-          formatAppLog("error", "at pages/Fasttest/Fasttest.vue:95", "注册失败:", err);
+          formatAppLog("error", "at pages/Fasttest/Fasttest.vue:99", "注册失败:", err);
           uni.showToast({
             title: "注册失败，请重试",
             icon: "none"
@@ -3446,19 +3451,45 @@ ${i3}
         } finally {
           this.isRegistering = false;
         }
+      },
+      setUserStorage() {
+        const test = uni.getStorageSync("User_data");
+        formatAppLog("log", "at pages/Fasttest/Fasttest.vue:112", "读取到的缓存如下：");
+        formatAppLog("log", "at pages/Fasttest/Fasttest.vue:113", test);
+        const user = {};
+        user.account = this.account;
+        user.password = this.password;
+        uni.setStorageSync("User_data", user);
+        const ans = uni.getStorageSync("User_data");
+        formatAppLog("log", "at pages/Fasttest/Fasttest.vue:119", "缓存已设置内容如下：");
+        formatAppLog("log", "at pages/Fasttest/Fasttest.vue:120", ans);
+      },
+      removeUserStorage() {
+        const test = uni.getStorageSync("User_data");
+        formatAppLog("log", "at pages/Fasttest/Fasttest.vue:125", test);
+        uni.removeStorageSync("User_data");
+        formatAppLog("log", "at pages/Fasttest/Fasttest.vue:127", "上面的缓存已删除");
       }
     }
   };
   function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", null, [
       vue.createElementVNode("button", {
-        onClick: _cache[0] || (_cache[0] = (...args) => $options.createAccount && $options.createAccount(...args)),
+        onClick: _cache[0] || (_cache[0] = ($event) => $options.createAccount()),
         class: "btn"
       }, "创建账号"),
       vue.createElementVNode("button", {
-        onClick: _cache[1] || (_cache[1] = (...args) => $options.checkRegister && $options.checkRegister(...args)),
+        onClick: _cache[1] || (_cache[1] = ($event) => $options.checkRegister()),
         class: "btn"
-      }, "账号查重")
+      }, "账号查重"),
+      vue.createElementVNode("button", {
+        onClick: _cache[2] || (_cache[2] = ($event) => $options.setUserStorage()),
+        class: "btn"
+      }, "身份缓存"),
+      vue.createElementVNode("button", {
+        onClick: _cache[3] || (_cache[3] = ($event) => $options.removeUserStorage()),
+        class: "btn"
+      }, "移除缓存")
     ]);
   }
   const PagesFasttestFasttest = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/Fasttest/Fasttest.vue"]]);
@@ -3470,18 +3501,14 @@ ${i3}
   __definePage("pages/User/Login", PagesUserLogin);
   __definePage("pages/Fasttest/Fasttest", PagesFasttestFasttest);
   const _sfc_main = {
-    globalData: {
-      isLogin: false
-    },
     onLaunch: function() {
-      getApp();
-      formatAppLog("log", "at App.vue:9", "App Launch");
+      formatAppLog("log", "at App.vue:4", "App Launch");
     },
     onShow: function() {
-      formatAppLog("log", "at App.vue:12", "App Show");
+      formatAppLog("log", "at App.vue:7", "App Show");
     },
     onHide: function() {
-      formatAppLog("log", "at App.vue:15", "App Hide");
+      formatAppLog("log", "at App.vue:10", "App Hide");
     }
   };
   const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/App.vue"]]);
@@ -3500,9 +3527,9 @@ ${i3}
     }
   });
   function createApp() {
-    const app2 = vue.createVueApp(App);
+    const app = vue.createVueApp(App);
     return {
-      app: app2
+      app
     };
   }
   const { app: __app__, Vuex: __Vuex__, Pinia: __Pinia__ } = createApp();

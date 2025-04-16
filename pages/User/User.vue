@@ -51,23 +51,47 @@
 export default {
 	data() {
 		return {
-			isLogin: false
+			isLogin:false,
 		}
+	},
+	onShow() {
+		this.getLoginInfo()
 	},
 	methods: {
 		goLogin() {
-			uni.navigateTo({
-				url:"/pages/User/Login"
-			})
+			if(this.isLogin == true)
+			{
+				uni.showModal({
+					title: '确认',
+					  content: '确认取消管理员身份并进入重新输入信息吗',
+					  success: (res) => {
+					    if (res.confirm) {
+					      uni.navigateTo({
+					      	url:"/pages/User/Login"
+					      })
+					    } else if (res.cancel) {
+					      return;
+					    }
+					  }
+				})
+			}
+			else
+			{
+				uni.navigateTo({
+					url:"/pages/User/Login"
+				})
+			}
 		},
 		getLoginInfo() {
-			this.isLogin = app.globalData.isLogin
-		}
+		  const user = uni.getStorageSync('User_data');
+		  if(user.account != undefined)
+		  {
+			this.isLogin = true;
+			console.log(user)
+		  }
+		  console.log(this.isLogin)
+		},
 	},
-	onLoad() {
-		const app = getApp()
-		this.getLoginInfo()
-	}
 }
 </script>
 

@@ -1,7 +1,9 @@
 <template>
 	<view>
-		<button @click="createAccount" class="btn">创建账号</button>
-		<button @click="checkRegister" class="btn">账号查重</button>
+		<button @click="createAccount()" class="btn">创建账号</button>
+		<button @click="checkRegister()" class="btn">账号查重</button>
+		<button @click="setUserStorage()" class="btn">身份缓存</button>
+		<button @click="removeUserStorage()" class="btn">移除缓存</button>
 	</view>
 </template>
 
@@ -12,6 +14,8 @@ export default
 		return {
 			isRegistering:false,
 			isRegistered:false,
+			account:"zhoujiacheng",
+			password:"123456",
 		}
 	},
 	methods:{
@@ -23,8 +27,8 @@ export default
 						collectionName: 'User_data',
 						query:
 						{
-							account:"zhoujiacheng",
-							password:"123456"
+							account:this.account,
+							password:this.password,
 						}
 					}
 				})
@@ -71,8 +75,8 @@ export default
 						collectionName: 'User_data',
 						data:
 						{
-							account:"zhoujiacheng",
-							password:"123456"
+							account:this.password,
+							password:this.password,
 						}
 					}
 				});
@@ -101,7 +105,27 @@ export default
 			{
 				this.isRegistering = false;
 			}
-		}
+		},
+		setUserStorage()
+		{
+			const test = uni.getStorageSync('User_data');
+			console.log("读取到的缓存如下：");
+			console.log(test);
+			const user = {};
+			user.account = this.account;
+			user.password = this.password;
+			uni.setStorageSync('User_data',user);
+			const ans = uni.getStorageSync('User_data');
+			console.log("缓存已设置内容如下：");
+			console.log(ans);
+		},
+		removeUserStorage()
+		{
+			const test = uni.getStorageSync('User_data');
+			console.log(test);
+			uni.removeStorageSync('User_data');
+			console.log("上面的缓存已删除");
+		},
 	}
 }	
 </script>

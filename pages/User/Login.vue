@@ -42,6 +42,7 @@
 
 <script>
 export default {
+  const app = getApp()
   data() {
     return {
 	  isLogin:false,
@@ -54,7 +55,7 @@ export default {
   methods: {
 	onload()
 	{
-		const app = getApp();
+		
 	},
 	onpageshow()
 	{
@@ -63,7 +64,6 @@ export default {
 	},
 	exitManager()
 	{
-		const app = getApp();
 		uni.showToast({
 			title: '退出成功，已恢复游客身份',
 			icon: 'none'
@@ -92,6 +92,10 @@ export default {
 				});
 				this.isLogin = true;
 				app.globalData.isLogin = true;
+				const user = {};
+				user.account = this.form.account,
+				user.password = this.form.password,
+				uni.setStorageSync('User_data',user);
 			}
 		} catch (err) 
 		{
