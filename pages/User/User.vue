@@ -18,7 +18,7 @@
 				</view>
 			</navigator>
 			
-			<navigator url="/pages/User/AboutUs">
+			<navigator url="/pages/User/Login">
 				<view class="menu-item">
 					<view class="menu-left">
 						<image src="/static/other_icons/标签.png" class="menu-icon"></image>

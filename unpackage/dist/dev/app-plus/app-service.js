@@ -169,7 +169,7 @@ if (uni.restoreGlobal) {
             })
           ])
         ]),
-        vue.createElementVNode("navigator", { url: "/pages/User/AboutUs" }, [
+        vue.createElementVNode("navigator", { url: "/pages/User/Login" }, [
           vue.createElementVNode("view", { class: "menu-item" }, [
             vue.createElementVNode("view", { class: "menu-left" }, [
               vue.createElementVNode("image", {
@@ -648,7 +648,7 @@ if (uni.restoreGlobal) {
   function I(e2) {
     return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
   }
-  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
+  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7001,"debugPort":9001,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
   let O = "";
   try {
     O = "__UNI__C65CF88";
@@ -3321,14 +3321,48 @@ ${i3}
   const _sfc_main$1 = {
     data() {
       return {
-        isRegistering: false
+        isRegistering: false,
+        isRegistered: false
       };
     },
     methods: {
+      async checkRegister() {
+        try {
+          const res = await nr.callFunction({
+            name: "db-query",
+            data: {
+              collectionName: "User_data",
+              query: {
+                account: "zhoujiacheng",
+                password: "123456"
+              }
+            }
+          });
+          if (res.result.code == 200) {
+            this.isRegistered = true;
+            uni.showToast({
+              title: "已有同名账号！",
+              icon: "error"
+            });
+          }
+        } catch (err) {
+          uni.showToast({
+            title: "函数调用失败",
+            icon: "error"
+          });
+        }
+      },
       async createAccount() {
         if (this.isRegistering) {
           uni.showToast({
             title: "正在注册中，请稍候",
+            icon: "none"
+          });
+          return;
+        }
+        if (this.isRegistered) {
+          uni.showToast({
+            title: "同名账号已注册",
             icon: "none"
           });
           return;
@@ -3349,9 +3383,9 @@ ${i3}
             title: "注册成功",
             icon: "success"
           });
-          formatAppLog("log", "at pages/Fasttest/Fasttest.vue:44", "用户数据:", res.result);
+          formatAppLog("log", "at pages/Fasttest/Fasttest.vue:84", "用户数据:", res.result);
         } catch (err) {
-          formatAppLog("error", "at pages/Fasttest/Fasttest.vue:46", "注册失败:", err);
+          formatAppLog("error", "at pages/Fasttest/Fasttest.vue:86", "注册失败:", err);
           uni.showToast({
             title: "注册失败，请重试",
             icon: "none"
@@ -3367,7 +3401,11 @@ ${i3}
       vue.createElementVNode("button", {
         onClick: _cache[0] || (_cache[0] = (...args) => $options.createAccount && $options.createAccount(...args)),
         class: "btn"
-      }, "创建账号")
+      }, "创建账号"),
+      vue.createElementVNode("button", {
+        onClick: _cache[1] || (_cache[1] = (...args) => $options.checkRegister && $options.checkRegister(...args)),
+        class: "btn"
+      }, "账号查重")
     ]);
   }
   const PagesFasttestFasttest = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["render", _sfc_render], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/Fasttest/Fasttest.vue"]]);
@@ -3393,6 +3431,20 @@ ${i3}
     }
   };
   const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/App.vue"]]);
+  uni.addInterceptor({
+    returnValue(res) {
+      if (!(!!res && (typeof res === "object" || typeof res === "function") && typeof res.then === "function")) {
+        return res;
+      }
+      return new Promise((resolve, reject) => {
+        res.then((res2) => {
+          if (!res2)
+            return resolve(res2);
+          return res2[0] ? reject(res2[0]) : resolve(res2[1]);
+        });
+      });
+    }
+  });
   function createApp() {
     const app2 = vue.createVueApp(App);
     return {
