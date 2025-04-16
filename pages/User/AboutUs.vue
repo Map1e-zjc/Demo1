@@ -7,7 +7,7 @@
 		<view class="info-list">
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/联系我们-选中.png" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/call.png" class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">招商热线</view>
@@ -17,7 +17,7 @@
 			
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/人像.png" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/people.png" class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">联系人</view>
@@ -27,7 +27,7 @@
 			
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/电子邮箱.png" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/email.png" class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">电子邮箱</view>
@@ -37,7 +37,7 @@
 			
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/公司地址.png" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/address.png" class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">公司地址</view>

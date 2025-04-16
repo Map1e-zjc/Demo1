@@ -1,40 +1,44 @@
 <template>
 	<view class="container">
 		<view class="top">
-			<view class="avatar-box">
-				<image src="/static/other_icons/管理员.png" class="icon" mode="aspectFit"></image>
+			
+			<view class="avatar-box" @click="goLogin">
+				<image v-if="isLogin" src="/static/other_icons/admin.png" class="icon" mode="aspectFit"></image>
+				<image v-else src="/static/other_icons/guest.png" class="icon" mode="aspectFit"></image>
 			</view>
-			<view class="login-text">管理员</view>
+		
+			
+			<view class="login-text">{{isLogin == true ? "管理员": "游客"}}</view>
 		</view>
 		
 		<view class="menu-list">
 			<navigator url="/pages/User/AboutUs">
 				<view class="menu-item">
 					<view class="menu-left">
-						<image src="/static/other_icons/编辑.png" class="menu-icon"></image>
+						<image src="/static/other_icons/edit.png" class="menu-icon"></image>
 						<text class="menu-text">跳转1</text>
 					</view>
-					<image src="/static/other_icons/箭头.png" class="arrow"></image>
+					<image src="/static/other_icons/arrow.png" class="arrow"></image>
 				</view>
 			</navigator>
 			
 			<navigator url="/pages/User/Login">
 				<view class="menu-item">
 					<view class="menu-left">
-						<image src="/static/other_icons/标签.png" class="menu-icon"></image>
+						<image src="/static/other_icons/label.png" class="menu-icon"></image>
 						<text class="menu-text">跳转2</text>
 					</view>
-					<image src="/static/other_icons/箭头.png" class="arrow"></image>
+					<image src="/static/other_icons/arrow.png" class="arrow"></image>
 				</view>
 			</navigator>
 			
 			<navigator url="/pages/User/AboutUs">
 				<view class="menu-item">
 					<view class="menu-left">
-						<image src="/static/other_icons/关于我们.png" class="menu-icon"></image>
+						<image src="/static/other_icons/about.png" class="menu-icon"></image>
 						<text class="menu-text">关于我们</text>
 					</view>
-					<image src="/static/other_icons/箭头.png" class="arrow"></image>
+					<image src="/static/other_icons/arrow.png" class="arrow"></image>
 				</view>
 			</navigator>
 			
@@ -43,15 +47,28 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
+const app = getApp()
 
-			}
-		},
-		methods: {
+export default {
+	data() {
+		return {
+			isLogin: false
 		}
+	},
+	methods: {
+		goLogin() {
+			uni.navigateTo({
+				url:"/pages/User/Login"
+			})
+		},
+		getLoginInfo() {
+			this.isLogin = app.globalData.isLogin
+		}
+	},
+	onLoad() {
+		this.getLoginInfo()
 	}
+}
 </script>
 
 <style scoped>
