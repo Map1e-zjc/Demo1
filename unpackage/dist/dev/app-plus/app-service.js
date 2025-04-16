@@ -40,26 +40,74 @@ if (uni.restoreGlobal) {
   };
   const _sfc_main$6 = {
     data() {
+      const minLat = 27.9, maxLat = 28.05;
+      const minLng = 120.6, maxLng = 120.8;
       return {
-        title: "Hello"
+        latitude: (minLat + maxLat) / 2,
+        // 初始中心点
+        longitude: (minLng + maxLng) / 2,
+        scale: 12,
+        markers: [],
+        // 原有标记点配置
+        polygons: [{
+          points: [],
+          strokeWidth: 4,
+          strokeColor: "#007AFF",
+          fillColor: "#007AFF22"
+        }]
       };
     },
-    onLoad() {
-    },
-    methods: {}
+    methods: {
+      onRegionChange(e2) {
+        if (e2.type === "end") {
+          const mapCtx = uni.createMapContext("myMap");
+          mapCtx.getCenterLocation({
+            success: (res) => {
+              const { minLat, maxLat, minLng, maxLng } = this.data.polygons[0];
+              if (res.latitude < minLat || res.latitude > maxLat || res.longitude < minLng || res.longitude > maxLng) {
+                mapCtx.moveToLocation({
+                  latitude: (minLat + maxLat) / 2,
+                  longitude: (minLng + maxLng) / 2
+                });
+              }
+            }
+          });
+        }
+      },
+      goToProductDetail() {
+        uni.navigateTo({
+          url: "/pages/User/Login"
+        });
+      }
+    }
   };
   function _sfc_render$5(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "content" }, [
-      vue.createElementVNode("view", { class: "text-area" }, [
-        vue.createElementVNode(
-          "text",
-          { class: "title" },
-          vue.toDisplayString($data.title),
-          1
-          /* TEXT */
-        )
-      ])
-    ]);
+    return vue.openBlock(), vue.createElementBlock(
+      vue.Fragment,
+      null,
+      [
+        vue.createElementVNode("view", { class: "map-container" }, [
+          vue.createElementVNode("map", {
+            id: "myMap",
+            style: { "width": "100%", "height": "80vh" },
+            latitude: $data.latitude,
+            longitude: $data.longitude,
+            scale: $data.scale,
+            markers: $data.markers,
+            polygons: $data.polygons,
+            "include-points": "{{polygons[0].points}}",
+            "show-location": "",
+            bindregionchange: "onRegionChange"
+          }, null, 8, ["latitude", "longitude", "scale", "markers", "polygons"])
+        ]),
+        vue.createElementVNode("button", {
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goToProductDetail && $options.goToProductDetail(...args)),
+          class: "btn"
+        }, "关于我们")
+      ],
+      64
+      /* STABLE_FRAGMENT */
+    );
   }
   const PagesIndexIndex = /* @__PURE__ */ _export_sfc(_sfc_main$6, [["render", _sfc_render$5], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/Index/Index.vue"]]);
   const _sfc_main$5 = {
@@ -503,7 +551,7 @@ if (uni.restoreGlobal) {
   function I(e2) {
     return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
   }
-  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","10.238.38.229","169.254.241.176","10.218.208.66"],"servePort":7001,"debugPort":9001,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
+  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","10.238.38.216","169.254.241.176","10.217.46.52"],"servePort":7001,"debugPort":9001,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
   let O = "";
   try {
     O = "__UNI__C65CF88";

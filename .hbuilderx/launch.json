@@ -12,6 +12,9 @@
             "default" : {
                 "launchtype" : "local"
             },
+            "h5" : {
+                "launchtype" : "local"
+            },
             "provider" : "alipay",
             "type" : "uniCloud"
         }
