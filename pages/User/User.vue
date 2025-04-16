@@ -1,18 +1,11 @@
 <template>
-<view class="container">
-		<view class="goto" @click="goSomewhere1">
-			跳转1
+	<view class="container">
 		<view class="top">
 			<view class="avatar-box">
 				<image src="/static/other_icons/管理员.png" class="icon" mode="aspectFit"></image>
 			</view>
 			<view class="login-text">管理员</view>
-</view>
-		<view class="goto" @click="goSomewhere2">
-			跳转2
 		</view>
-		<view class="about" @click="goAboutUs">
-			关于我们
 		
 		<view class="menu-list">
 			<navigator url="/pages/User/AboutUs">
@@ -45,33 +38,11 @@
 				</view>
 			</navigator>
 			
-</view>
-</view>
-	
+		</view>
+	</view>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-		
-	}
-  },
-  methods: {
-	goSomewhere1() {
-		uni.navigateTo({
-			url: "/pages/User/AboutUs"
-		})
-	},
-	goSomewhere2() {
-		uni.navigateTo({
-			url: "/pages/User/AboutUs"
-		})
-	},
-	goAboutUs() {
-		uni.navigateTo({
-			url: "/pages/User/AboutUs"
-		})
 	export default {
 		data() {
 			return {
@@ -81,30 +52,13 @@ export default {
 		methods: {
 		}
 	}
-  }
-}
 </script>
 
 <style scoped>
 .container {
-	padding: 0 20rpx;
-}	
-	
-.goto {
-	padding: 50rpx;
-	text-align: center;
-	font-size: 40rpx;
-	border: 1px solid #e5e5e5 ;
-	background-color: #eee;
-	margin: 10rpx 0;
 	padding: 0;
 	background-color: #f5f5f5;
 }
-.about {
-	padding: 50rpx;
-	text-align: center;
-	font-size: 40rpx;
-	border: 1px solid #e5e5e5 ;
 
 .top {
 	height: 300rpx;
@@ -171,5 +125,4 @@ export default {
 	height: 30rpx;
 	opacity: 0.5;
 }
-</style>
 </style>

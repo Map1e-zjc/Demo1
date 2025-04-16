@@ -130,42 +130,76 @@ if (uni.restoreGlobal) {
     return vue.openBlock(), vue.createElementBlock("view");
   }
   const PagesProjectProjectDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/Project/ProjectDetail.vue"]]);
+  const _imports_0$1 = "/static/other_icons/管理员.png";
+  const _imports_1$1 = "/static/other_icons/编辑.png";
+  const _imports_2$1 = "/static/other_icons/箭头.png";
+  const _imports_3$1 = "/static/other_icons/标签.png";
+  const _imports_4 = "/static/other_icons/关于我们.png";
   const _sfc_main$4 = {
     data() {
       return {};
     },
-    methods: {
-      goSomewhere1() {
-        uni.navigateTo({
-          url: "/pages/User/AboutUs"
-        });
-      },
-      goSomewhere2() {
-        uni.navigateTo({
-          url: "/pages/User/Login"
-        });
-      },
-      goAboutUs() {
-        uni.navigateTo({
-          url: "/pages/User/AboutUs"
-        });
-      }
-    }
+    methods: {}
   };
   function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container" }, [
-      vue.createElementVNode("view", {
-        class: "goto",
-        onClick: _cache[0] || (_cache[0] = (...args) => $options.goSomewhere1 && $options.goSomewhere1(...args))
-      }, " 跳转1 "),
-      vue.createElementVNode("view", {
-        class: "goto",
-        onClick: _cache[1] || (_cache[1] = (...args) => $options.goSomewhere2 && $options.goSomewhere2(...args))
-      }, " 跳转2 "),
-      vue.createElementVNode("view", {
-        class: "about",
-        onClick: _cache[2] || (_cache[2] = (...args) => $options.goAboutUs && $options.goAboutUs(...args))
-      }, " 关于我们 ")
+      vue.createElementVNode("view", { class: "top" }, [
+        vue.createElementVNode("view", { class: "avatar-box" }, [
+          vue.createElementVNode("image", {
+            src: _imports_0$1,
+            class: "icon",
+            mode: "aspectFit"
+          })
+        ]),
+        vue.createElementVNode("view", { class: "login-text" }, "管理员")
+      ]),
+      vue.createElementVNode("view", { class: "menu-list" }, [
+        vue.createElementVNode("navigator", { url: "/pages/User/AboutUs" }, [
+          vue.createElementVNode("view", { class: "menu-item" }, [
+            vue.createElementVNode("view", { class: "menu-left" }, [
+              vue.createElementVNode("image", {
+                src: _imports_1$1,
+                class: "menu-icon"
+              }),
+              vue.createElementVNode("text", { class: "menu-text" }, "跳转1")
+            ]),
+            vue.createElementVNode("image", {
+              src: _imports_2$1,
+              class: "arrow"
+            })
+          ])
+        ]),
+        vue.createElementVNode("navigator", { url: "/pages/User/AboutUs" }, [
+          vue.createElementVNode("view", { class: "menu-item" }, [
+            vue.createElementVNode("view", { class: "menu-left" }, [
+              vue.createElementVNode("image", {
+                src: _imports_3$1,
+                class: "menu-icon"
+              }),
+              vue.createElementVNode("text", { class: "menu-text" }, "跳转2")
+            ]),
+            vue.createElementVNode("image", {
+              src: _imports_2$1,
+              class: "arrow"
+            })
+          ])
+        ]),
+        vue.createElementVNode("navigator", { url: "/pages/User/AboutUs" }, [
+          vue.createElementVNode("view", { class: "menu-item" }, [
+            vue.createElementVNode("view", { class: "menu-left" }, [
+              vue.createElementVNode("image", {
+                src: _imports_4,
+                class: "menu-icon"
+              }),
+              vue.createElementVNode("text", { class: "menu-text" }, "关于我们")
+            ]),
+            vue.createElementVNode("image", {
+              src: _imports_2$1,
+              class: "arrow"
+            })
+          ])
+        ])
+      ])
     ]);
   }
   const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-1e1b347f"], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/User/User.vue"]]);
@@ -614,7 +648,7 @@ if (uni.restoreGlobal) {
   function I(e2) {
     return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
   }
-  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7001,"debugPort":9001,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
+  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
   let O = "";
   try {
     O = "__UNI__C65CF88";
