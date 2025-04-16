@@ -16,7 +16,14 @@
 		},
 		"account":
 		{
-			
+			"description":"账号",
+			"bsonType":"string"
+		},
+		"password":
+		{
+			"description":"密码",
+			"bsonType":"password"
 		}
+		
 	}
 }
