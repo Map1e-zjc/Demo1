@@ -97,11 +97,12 @@ if (uni.restoreGlobal) {
             polygons: $data.polygons,
             "include-points": "{{polygons[0].points}}",
             "show-location": "",
-            bindregionchange: "onRegionChange"
-          }, null, 8, ["latitude", "longitude", "scale", "markers", "polygons"])
+            bindregionchange: "onRegionChange",
+            onTap: _cache[0] || (_cache[0] = (...args) => _ctx.handleMapTap && _ctx.handleMapTap(...args))
+          }, null, 40, ["latitude", "longitude", "scale", "markers", "polygons"])
         ]),
         vue.createElementVNode("button", {
-          onClick: _cache[0] || (_cache[0] = (...args) => $options.goToProductDetail && $options.goToProductDetail(...args)),
+          onClick: _cache[1] || (_cache[1] = (...args) => $options.goToProductDetail && $options.goToProductDetail(...args)),
           class: "btn"
         }, "快捷操作")
       ],
@@ -130,41 +131,72 @@ if (uni.restoreGlobal) {
     return vue.openBlock(), vue.createElementBlock("view");
   }
   const PagesProjectProjectDetail = /* @__PURE__ */ _export_sfc(_sfc_main$5, [["render", _sfc_render$4], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/Project/ProjectDetail.vue"]]);
-  const _imports_0$1 = "/static/other_icons/管理员.png";
-  const _imports_1$1 = "/static/other_icons/编辑.png";
-  const _imports_2$1 = "/static/other_icons/箭头.png";
-  const _imports_3$1 = "/static/other_icons/标签.png";
-  const _imports_4 = "/static/other_icons/关于我们.png";
+  const _imports_0$1 = "/static/other_icons/admin.png";
+  const _imports_1$1 = "/static/other_icons/guest.png";
+  const _imports_2$1 = "/static/other_icons/edit.png";
+  const _imports_3$1 = "/static/other_icons/arrow.png";
+  const _imports_4 = "/static/other_icons/label.png";
+  const _imports_5 = "/static/other_icons/about.png";
   const _sfc_main$4 = {
     data() {
-      return {};
+      return {
+        isLogin: false
+      };
     },
-    methods: {}
+    methods: {
+      goLogin() {
+        uni.navigateTo({
+          url: "/pages/User/Login"
+        });
+      },
+      getLoginInfo() {
+        this.isLogin = app.globalData.isLogin;
+      }
+    },
+    onLoad() {
+      getApp();
+      this.getLoginInfo();
+    }
   };
   function _sfc_render$3(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container" }, [
       vue.createElementVNode("view", { class: "top" }, [
-        vue.createElementVNode("view", { class: "avatar-box" }, [
-          vue.createElementVNode("image", {
+        vue.createElementVNode("view", {
+          class: "avatar-box",
+          onClick: _cache[0] || (_cache[0] = (...args) => $options.goLogin && $options.goLogin(...args))
+        }, [
+          $data.isLogin ? (vue.openBlock(), vue.createElementBlock("image", {
+            key: 0,
             src: _imports_0$1,
             class: "icon",
             mode: "aspectFit"
-          })
+          })) : (vue.openBlock(), vue.createElementBlock("image", {
+            key: 1,
+            src: _imports_1$1,
+            class: "icon",
+            mode: "aspectFit"
+          }))
         ]),
-        vue.createElementVNode("view", { class: "login-text" }, "管理员")
+        vue.createElementVNode(
+          "view",
+          { class: "login-text" },
+          vue.toDisplayString($data.isLogin == true ? "管理员" : "游客"),
+          1
+          /* TEXT */
+        )
       ]),
       vue.createElementVNode("view", { class: "menu-list" }, [
         vue.createElementVNode("navigator", { url: "/pages/User/AboutUs" }, [
           vue.createElementVNode("view", { class: "menu-item" }, [
             vue.createElementVNode("view", { class: "menu-left" }, [
               vue.createElementVNode("image", {
-                src: _imports_1$1,
+                src: _imports_2$1,
                 class: "menu-icon"
               }),
               vue.createElementVNode("text", { class: "menu-text" }, "跳转1")
             ]),
             vue.createElementVNode("image", {
-              src: _imports_2$1,
+              src: _imports_3$1,
               class: "arrow"
             })
           ])
@@ -173,13 +205,13 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "menu-item" }, [
             vue.createElementVNode("view", { class: "menu-left" }, [
               vue.createElementVNode("image", {
-                src: _imports_3$1,
+                src: _imports_4,
                 class: "menu-icon"
               }),
               vue.createElementVNode("text", { class: "menu-text" }, "跳转2")
             ]),
             vue.createElementVNode("image", {
-              src: _imports_2$1,
+              src: _imports_3$1,
               class: "arrow"
             })
           ])
@@ -188,13 +220,13 @@ if (uni.restoreGlobal) {
           vue.createElementVNode("view", { class: "menu-item" }, [
             vue.createElementVNode("view", { class: "menu-left" }, [
               vue.createElementVNode("image", {
-                src: _imports_4,
+                src: _imports_5,
                 class: "menu-icon"
               }),
               vue.createElementVNode("text", { class: "menu-text" }, "关于我们")
             ]),
             vue.createElementVNode("image", {
-              src: _imports_2$1,
+              src: _imports_3$1,
               class: "arrow"
             })
           ])
@@ -203,10 +235,10 @@ if (uni.restoreGlobal) {
     ]);
   }
   const PagesUserUser = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["render", _sfc_render$3], ["__scopeId", "data-v-1e1b347f"], ["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/pages/User/User.vue"]]);
-  const _imports_0 = "/static/other_icons/联系我们-选中.png";
-  const _imports_1 = "/static/other_icons/人像.png";
-  const _imports_2 = "/static/other_icons/电子邮箱.png";
-  const _imports_3 = "/static/other_icons/公司地址.png";
+  const _imports_0 = "/static/other_icons/call.png";
+  const _imports_1 = "/static/other_icons/people.png";
+  const _imports_2 = "/static/other_icons/email.png";
+  const _imports_3 = "/static/other_icons/address.png";
   const _sfc_main$3 = {};
   function _sfc_render$2(_ctx, _cache) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "container" }, [
@@ -648,7 +680,7 @@ if (uni.restoreGlobal) {
   function I(e2) {
     return e2 && "string" == typeof e2 ? JSON.parse(e2) : e2;
   }
-  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7001,"debugPort":9001,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
+  const S = true, b = "app", T = I(define_process_env_UNI_SECURE_NETWORK_CONFIG_default), A = b, P = I('{"address":["127.0.0.1","169.254.241.176","192.168.113.207"],"servePort":7000,"debugPort":9000,"initialLaunchType":"local","skipFiles":["<node_internals>/**","D:/uniapp/HBuilderX/plugins/unicloud/**/*.js"]}'), C = I('[{"provider":"alipay","spaceName":"demo1test","spaceId":"env-00jxtf859tfv","spaceAppId":"2021005139691230","accessKey":"e8lBRJ0rm5lg6glr","secretKey":"066TuAAv7lk2Mf7v"}]') || [];
   let O = "";
   try {
     O = "__UNI__C65CF88";
@@ -3209,7 +3241,6 @@ ${i3}
     }
   })();
   var nr = tr;
-  const app = getApp();
   const _sfc_main$2 = {
     data() {
       return {
@@ -3221,8 +3252,23 @@ ${i3}
       };
     },
     methods: {
+      onload() {
+        getApp();
+      },
       onpageshow() {
-        this.isLogin = app.globalData.isLogin;
+        if (app.globalData.isLogin == void 0)
+          this.isLogin = false, app.globalData.isLogin = false;
+        else
+          this.isLogin = app.globalData.isLogin;
+      },
+      exitManager() {
+        const app2 = getApp();
+        uni.showToast({
+          title: "退出成功，已恢复游客身份",
+          icon: "none"
+        });
+        app2.globalData.isLogin = false;
+        this.isLogin = false;
       },
       async handleLogin() {
         try {
@@ -3241,13 +3287,12 @@ ${i3}
               title: "登录成功，已获得管理员权限",
               icon: "none"
             });
+            this.isLogin = true;
             app.globalData.isLogin = true;
           }
         } catch (err) {
-          uni.showToast({
-            title: "账号密码错误",
-            icon: "error"
-          });
+          formatAppLog("log", "at pages/User/Login.vue:98", this.isLogin);
+          formatAppLog("log", "at pages/User/Login.vue:99", err);
         }
       },
       navigateToBack() {
@@ -3265,7 +3310,7 @@ ${i3}
         "form",
         {
           class: "login-form",
-          onSubmit: _cache[2] || (_cache[2] = (...args) => $options.handleLogin && $options.handleLogin(...args))
+          onSubmit: _cache[3] || (_cache[3] = (...args) => $options.handleLogin && $options.handleLogin(...args))
         },
         [
           vue.createElementVNode("view", { class: "input-item" }, [
@@ -3309,6 +3354,7 @@ ${i3}
           }, " 管理员登录 ", 8, ["disabled"])) : vue.createCommentVNode("v-if", true),
           $data.isLogin ? (vue.openBlock(), vue.createElementBlock("button", {
             key: 1,
+            onClick: _cache[2] || (_cache[2] = (...args) => $options.exitManager && $options.exitManager(...args)),
             class: "exit-btn"
           }, " 退出管理员模式 ")) : vue.createCommentVNode("v-if", true)
         ],
@@ -3428,13 +3474,14 @@ ${i3}
       isLogin: false
     },
     onLaunch: function() {
-      formatAppLog("log", "at App.vue:8", "App Launch");
+      getApp();
+      formatAppLog("log", "at App.vue:9", "App Launch");
     },
     onShow: function() {
-      formatAppLog("log", "at App.vue:11", "App Show");
+      formatAppLog("log", "at App.vue:12", "App Show");
     },
     onHide: function() {
-      formatAppLog("log", "at App.vue:14", "App Hide");
+      formatAppLog("log", "at App.vue:15", "App Hide");
     }
   };
   const App = /* @__PURE__ */ _export_sfc(_sfc_main, [["__file", "C:/Users/11879/Desktop/瓯域产业云招商小程序/Demo1/App.vue"]]);

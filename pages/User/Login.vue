@@ -31,6 +31,7 @@
         管理员登录
       </button>
 	  <button 
+		@tap="exitManager"
 		v-if="isLogin"
 		class="exit-btn">
 	    退出管理员模式
@@ -40,7 +41,6 @@
 </template>
 
 <script>
-const app = getApp()
 export default {
   data() {
     return {
@@ -52,9 +52,24 @@ export default {
     }
   },
   methods: {
+	onload()
+	{
+		const app = getApp();
+	},
 	onpageshow()
 	{
-		this.isLogin = app.globalData.isLogin;
+		if(app.globalData.isLogin == undefined) this.isLogin = false, app.globalData.isLogin = false;
+		else this.isLogin = app.globalData.isLogin;
+	},
+	exitManager()
+	{
+		const app = getApp();
+		uni.showToast({
+			title: '退出成功，已恢复游客身份',
+			icon: 'none'
+		});
+		app.globalData.isLogin = false;
+		this.isLogin = false;
 	},
 	async handleLogin()
 	{
@@ -75,14 +90,13 @@ export default {
 					title: '登录成功，已获得管理员权限',
 					icon: 'none'
 				});
+				this.isLogin = true;
 				app.globalData.isLogin = true;
 			}
 		} catch (err) 
 		{
-			uni.showToast({
-				title: '账号密码错误',
-				icon: 'error'
-			});
+			console.log(this.isLogin)
+			console.log(err)
 		}
 	},
     navigateToBack() {

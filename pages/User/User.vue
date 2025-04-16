@@ -47,7 +47,6 @@
 </template>
 
 <script>
-const app = getApp()
 
 export default {
 	data() {
@@ -66,6 +65,7 @@ export default {
 		}
 	},
 	onLoad() {
+		const app = getApp()
 		this.getLoginInfo()
 	}
 }
