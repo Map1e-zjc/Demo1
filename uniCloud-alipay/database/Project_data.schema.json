@@ -1,18 +1,123 @@
 {
-	"bsonType":"object",
-	"required":[],
-	"permission":
-	{
-		"read":false,
-		"create":false,
-		"update":false,
-		"delete":false
+  "bsonType": "object",
+  "required": ["地址"],
+  "permission": {
+    "read": "doc.status == 'published'", // 示例：仅允许读取已发布地块
+    "create": "role == 'admin'",
+    "update": "role == 'admin'",
+    "delete": "role == 'admin'"
+  },
+  "properties": {
+    "_id": {
+      "bsonType": "string",
+      "description": "地块唯一ID"
+    },
+	"status": {
+	      "bsonType": "string",
+	      "title": "发布状态",
+	      "enum": ["draft", "published", "archived"],
+	      "defaultValue": "draft"
 	},
-	"properties":
-	{
-		"_id":
-		{
-			"description":"ID，系统自动生成"
-		}
-	}
+    "地址": {
+      "bsonType": "string",
+      "title": "详细地址",
+      "minLength": 5,
+      "maxLength": 200,
+      "errorMessage": "地址长度需在5-200个字符之间"
+    },
+    "楼栋": {
+      "bsonType": "array",
+      "title": "楼栋列表",
+      "items": {
+        "bsonType": "object",
+        "required": ["楼栋号"],
+        "properties": {
+          "楼栋号": {
+            "bsonType": "string",
+            "title": "楼栋编号",
+            "pattern": "^[A-Z0-9]{1,3}栋$",
+            "errorMessage": "格式示例：A1栋、B2栋"
+          },
+          "楼层": {
+            "bsonType": "array",
+            "title": "楼层信息",
+            "items": {
+              "bsonType": "object",
+              "required": ["楼层号", "招商状态"],
+              "properties": {
+                "楼层号": {
+                  "bsonType": "string",
+                  "title": "楼层编号",
+                  "pattern": "^[B1-9]F$",
+                  "errorMessage": "格式示例：B1F、2F、3F"
+                },
+                "招商状态": {
+                  "bsonType": "string",
+                  "title": "招商状态",
+                  "enum": ["已出租", "空置中", "预保留"],
+                  "errorMessage": "请选择有效状态"
+                },
+                "招租面积": {
+                  "bsonType": "double",
+                  "minimum": 0,
+                  "maximum": 10000,
+                  "title": "可租赁面积(㎡)"
+                },
+                "空置面积": {
+                  "bsonType": "double",
+                  "minimum": 0,
+                  "maximum": 10000,
+                  "title": "空置面积(㎡)"
+                },
+                "入驻企业_encrypted": {
+                  "bsonType": "string",
+                  "title": "入驻企业(加密)",
+                  "permission": {
+                    "read": "role == 'admin'",
+                    "write": "role == 'admin'"
+                  }
+                },
+                "入驻面积_encrypted": {
+                  "bsonType": "double",
+                  "title": "入驻面积(加密)",
+                  "permission": {
+                    "read": "role == 'admin'",
+                    "write": "role == 'admin'"
+                  }
+                },
+                "租金价格_encrypted": {
+                  "bsonType": "double",
+                  "title": "租金价格(加密)",
+                  "permission": {
+                    "read": "role == 'admin'",
+                    "write": "role == 'admin'"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "created_time": {
+      "bsonType": "timestamp",
+      "title": "创建时间",
+      "defaultValue": {
+        "$env": "now"
+      }
+    }
+  },
+  "indexes": [
+    {
+      "name": "地址索引",
+      "keys": [{ "地址": 1 }]
+    },
+    {
+      "name": "楼栋联合索引",
+      "keys": [
+        { "楼栋.楼栋号": 1 },
+        { "楼栋.楼层.楼层号": 1 }
+      ]
+    }
+  ]
 }
