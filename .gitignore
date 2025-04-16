@@ -15,6 +15,7 @@ node_modules/
 .vscode/
 .cursor/
 .trae/
+.hbuilderx/
  
 # 忽略日志文件
 /logs/
