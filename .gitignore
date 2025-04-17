@@ -3,6 +3,8 @@ node_modules/
 /dist/
 /dev/
 /.DS_Store
+uni_modules/
+uniCloud/
  
 # 忽略UniApp编译生成的小程序相关目录
 /unpackage/
@@ -10,6 +12,7 @@ node_modules/
 # 忽略本地配置文件（请根据实际情况修改）
 /manifest.local.json
  
+
 # 忽略编辑器自动生成的文件
 .idea/
 .vscode/
