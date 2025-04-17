@@ -27,8 +27,7 @@
     },
 	"image": {
 		"bsonType": "file",
-		"title": "地块照片",
-		"path": "images/"
+		"title": "地块照片"
 	},
     "buildings": {
       "bsonType": "array",

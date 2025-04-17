@@ -175,7 +175,9 @@ export default
 							icon: 'none'
 						});
 					} finally {
-						uni.hideLoading();
+						uni.hideLoading({
+							noConflict: true //hideloading与showtoast混用时,防止在真机中toast一闪而过
+						});
 					}
 				}
 			});
