@@ -1,8 +1,8 @@
 {
   "bsonType": "object",
-  "required": ["name"],
+  "required": [],
   "permission": {
-    "read": "doc.status == 'published'", // 示例：仅允许读取已发布项目
+    "read": "doc.status == 'published'",
     "create": "role == 'admin'",
     "update": "role == 'admin'",
     "delete": "role == 'admin'"
@@ -12,95 +12,86 @@
       "bsonType": "string",
       "description": "项目唯一ID"
     },
-	"name": {
-	  "bsonType": "string",
-	  "description": "项目名称"
-	},
-	"district":{
-	  "bsonType": "string",
-	  "description":"城区名"
-	},
-	"address": {
-	  "bsonType": "string",
-	  "title": "详细地址",
-	  "minLength": 5,
-	  "maxLength": 200,
-	  "errorMessage": "地址长度需在5-200个字符之间"
-	},
-	"status": {
-	  "bsonType": "string",
-	  "title": "发布状态",
-	  "enum": ["draft", "published", "archived"],
-	  "defaultValue": "draft"
-	},
-	"vacantArea": {
-	  "bsonType": "double",
-	  "minimum": 0,
-	  "maximum": 10000,
-	  "title": "空置面积(㎡)"
-	},
-	"image": {
-		"bsonType": "file",
-		"title": "项目照片"
-	},
-	"investment_status": {
-	  "bsonType": "string",
-	  "title": "招商状态",
-	  "enum": ["已出租", "空置中", "预保留"],
-	  "errorMessage": "请选择有效状态"
-	},
-	"investment_area": {
-	  "bsonType": "double",
-	  "minimum": 0,
-	  "maximum": 10000,
-	  "title": "可租赁面积(㎡)"
-	},
-	"companies": {
-	  "bsonType": "array",
-	  "title": "入驻企业(加密)",
-	  "permission": {
-		"read": "role == 'admin'",
-		"write": "role == 'admin'"
-	  },
-	  "properties":{
-		"name":{
-			"bsonType": "string",
-			"description": "企业名"
-		},
-		"area":{
-			"bsonType": "double",
-			"description": "入驻面积"
-		},
-		"period":{
-			"bsonType": "string",
-			"description": "入驻时间段"
-		}
-	  }
-	 }
-	},
-	"prices":
-	{
-		"bsonType": "array",
-		"title": "租金信息(加密)",
-		"permission": {
-			"read": "role == 'admin'",
-			"write": "role == 'admin'"
-		},
-		"properties":{
-			"name":{
-				"bsonType": "string",
-				"description": "企业名"
-			},
-			"area":{
-				"bsonType": "double",
-				"description": "入驻面积"
-			},
-			"period":{
-				"bsonType": "string",
-				"description": "入驻时间段"
-			}
-		}
-	},
+    "name": {
+      "bsonType": "string",
+      "description": "项目名称"
+    },
+    "location": {
+      "bsonType": "string",
+      "description": "项目位置信息"
+    },
+    "status": {
+      "bsonType": "string",
+      "title": "发布状态",
+      "enum": ["draft", "published", "archived"],
+      "defaultValue": "draft"
+    },
+    "vacantArea": {
+      "bsonType": "double",
+      "minimum": 0,
+      "maximum": 10000,
+      "title": "空置面积(㎡)"
+    },
+    "image": {
+      "bsonType": "file",
+      "title": "项目照片"
+    },
+    "investment_status": {
+      "bsonType": "string",
+      "title": "招商状态",
+      "enum": ["已出租", "空置中", "预保留"],
+      "errorMessage": "请选择有效状态"
+    },
+    "companies": {
+      "bsonType": "array",
+      "title": "入驻企业(加密)",
+      "permission": {
+        "read": "role == 'admin'",
+        "write": "role == 'admin'"
+      },
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "name": {
+            "bsonType": "string",
+            "description": "企业名"
+          },
+          "area": {
+            "bsonType": "double",
+            "description": "入驻面积"
+          },
+          "period": {
+            "bsonType": "string",
+            "description": "入驻时间段"
+          }
+        }
+      }
+    },
+    "prices": {
+      "bsonType": "array",
+      "title": "租金信息(加密)",
+      "permission": {
+        "read": "role == 'admin'",
+        "write": "role == 'admin'"
+      },
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "name": {
+            "bsonType": "string",
+            "description": "企业名"
+          },
+          "area": {
+            "bsonType": "double",
+            "description": "入驻面积"
+          },
+          "period": {
+            "bsonType": "string",
+            "description": "入驻时间段"
+          }
+        }
+      }
+    },
     "created_time": {
       "bsonType": "timestamp",
       "title": "创建时间",
@@ -108,4 +99,5 @@
         "$env": "now"
       }
     }
+  }
 }

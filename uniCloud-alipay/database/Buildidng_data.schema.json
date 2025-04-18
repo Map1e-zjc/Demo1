@@ -1,0 +1,59 @@
+{
+  "bsonType": "object",
+  "required": [],
+  "permission": {
+    "read": true,
+    "create": "role == 'admin'",
+    "update": "role == 'admin'",
+    "delete": "role == 'admin'"
+  },
+  "properties": {
+    "_id": {
+      "bsonType": "string",
+      "description": "楼栋ID"
+    },
+    "name": {
+      "bsonType": "string",
+      "description": "楼栋名称"
+    },
+    "district": {
+      "bsonType": "string",
+      "description": "城区名"
+    },
+    "address": {
+      "bsonType": "string",
+      "title": "楼栋地址",
+      "minLength": 5,
+      "maxLength": 200,
+      "errorMessage": "地址长度需在5-200个字符之间"
+    },
+    "image": {
+      "bsonType": "file",
+      "title": "楼栋照片"
+    },
+    "investment_area": {
+      "bsonType": "double",
+      "minimum": 0,
+      "maximum": 10000,
+      "title": "可租赁面积(㎡)"
+    },
+    "total_area": {
+      "bsonType": "double",
+      "minimum": 0,
+      "maximum": 10000,
+      "title": "总面积(㎡)"
+    },
+    "projects": {
+      "bsonType": "array",
+      "items": {
+        "bsonType": "object",
+        "properties": {
+          "project_id": {
+            "bsonType": "string",
+            "description": "项目唯一ID"
+          }
+        }
+      }
+    }
+  }
+}
