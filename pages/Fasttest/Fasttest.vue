@@ -4,7 +4,7 @@
 		<button @click="checkRegister()" class="btn">账号查重</button>
 		<button @click="setUserStorage()" class="btn">身份缓存</button>
 		<button @click="removeUserStorage()" class="btn">移除缓存</button>
-		<button @click="uploadImage" class="btn">上传照片</button>
+		<button @click="uploadImage()" class="btn">上传照片</button>
 	</view>
 </template>
 
