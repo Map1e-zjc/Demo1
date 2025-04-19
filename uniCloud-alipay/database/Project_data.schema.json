@@ -20,10 +20,22 @@
       "bsonType": "string",
       "description": "项目位置信息"
     },
+    "description": {
+      "bsonType": "string",
+      "description": "项目描述"
+    },
+    "district": {
+      "bsonType": "string",
+      "description": "城区名"
+    },
     "status": {
       "bsonType": "string",
       "title": "发布状态",
-      "enum": ["draft", "published", "archived"],
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
       "defaultValue": "draft"
     },
     "LeasingArea": {
@@ -32,20 +44,24 @@
       "maximum": 10000,
       "title": "招租面积(㎡)"
     },
-	"OccupancyArea": {
-	  "bsonType": "double",
-	  "minimum": 0,
-	  "maximum": 10000,
-	  "title": "入驻面积(㎡)"
-	},
+    "OccupancyArea": {
+      "bsonType": "double",
+      "minimum": 0,
+      "maximum": 10000,
+      "title": "入驻面积(㎡)"
+    },
     "image": {
-      "bsonType": "file",
+      "bsonType": "string",
       "title": "项目照片"
     },
-    "investment_status": {
+    "investmentStatus": {
       "bsonType": "string",
       "title": "招商状态",
-      "enum": ["已出租", "空置中", "预保留"],
+      "enum": [
+        "已出租",
+        "招租中",
+        "预保留"
+      ],
       "errorMessage": "请选择有效状态"
     },
     "companies": {
@@ -83,15 +99,15 @@
       "items": {
         "bsonType": "object",
         "properties": {
-          "name": {
+          "floor": {
             "bsonType": "string",
             "description": "具体楼层"
           },
-          "价格": {
+          "rent": {
             "bsonType": "double",
             "description": "租金(元/㎡/月)"
           },
-          "period": {
+          "payment": {
             "bsonType": "string",
             "description": "支付方式"
           }

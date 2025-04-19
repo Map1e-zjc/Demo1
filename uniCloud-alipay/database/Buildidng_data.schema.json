@@ -28,7 +28,7 @@
       "errorMessage": "地址长度需在5-200个字符之间"
     },
     "image": {
-      "bsonType": "file",
+      "bsonType": "string",
       "title": "楼栋照片"
     },
    "LeasingArea": {
