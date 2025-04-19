@@ -31,18 +31,18 @@
       "bsonType": "file",
       "title": "楼栋照片"
     },
-    "investment_area": {
-      "bsonType": "double",
-      "minimum": 0,
-      "maximum": 10000,
-      "title": "可租赁面积(㎡)"
-    },
-    "total_area": {
-      "bsonType": "double",
-      "minimum": 0,
-      "maximum": 10000,
-      "title": "总面积(㎡)"
-    },
+   "LeasingArea": {
+     "bsonType": "double",
+     "minimum": 0,
+     "maximum": 10000,
+     "title": "招租面积(㎡)"
+   },
+   "OccupancyArea": {
+     "bsonType": "double",
+     "minimum": 0,
+     "maximum": 10000,
+     "title": "入驻面积(㎡)"
+   },
     "projects": {
       "bsonType": "array",
       "items": {

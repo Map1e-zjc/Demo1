@@ -26,12 +26,18 @@
       "enum": ["draft", "published", "archived"],
       "defaultValue": "draft"
     },
-    "vacantArea": {
+    "LeasingArea": {
       "bsonType": "double",
       "minimum": 0,
       "maximum": 10000,
-      "title": "空置面积(㎡)"
+      "title": "招租面积(㎡)"
     },
+	"OccupancyArea": {
+	  "bsonType": "double",
+	  "minimum": 0,
+	  "maximum": 10000,
+	  "title": "入驻面积(㎡)"
+	},
     "image": {
       "bsonType": "file",
       "title": "项目照片"
@@ -79,15 +85,15 @@
         "properties": {
           "name": {
             "bsonType": "string",
-            "description": "企业名"
+            "description": "具体楼层"
           },
-          "area": {
+          "价格": {
             "bsonType": "double",
-            "description": "入驻面积"
+            "description": "租金(元/㎡/月)"
           },
           "period": {
             "bsonType": "string",
-            "description": "入驻时间段"
+            "description": "支付方式"
           }
         }
       }
