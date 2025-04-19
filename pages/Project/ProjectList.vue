@@ -22,7 +22,7 @@
 			>
 				<!-- 项目图片 -->
 				<view class="project-image">
-					<image :src="item.image || '/static/image/test.png'" mode="aspectFill"></image>
+					<image :src="item.image" mode="aspectFill"></image>
 					<view class="status-tag">{{ item.investmentStatus }}</view>
 				</view>
 				
@@ -76,63 +76,7 @@
 				isLogin: false,
 				currentTab: 0,
 				tabs: ['全部', '鹿城区', '瓯海区'],
-				projects: [
-					{
-						_id: '1',
-						name: '高联大厦',
-						district: '鹿城区',
-						address: '车站大道11号',
-						LeasingArea: 4000,
-						OccupancyArea: 1500,
-						investmentStatus: '招租中',
-						image: '',
-						companies: [
-							{ name: '温州科技有限公司', area: 800 },
-							{ name: '西创科技有限公司', area: 700 }
-						],
-						prices: [
-							{ floor: '5-8层', rent: 60, payment: '季付' },
-							{ floor: '9-12层', rent: 80, payment: '季付' }
-						]
-					},
-					{
-						_id: '2',
-						name: '瑞丰大厦',
-						district: '鹿城区',
-						address: '解放路88号',
-						LeasingArea: 3500,
-						OccupancyArea: 1700,
-						investmentStatus: '招租中',
-						image: '',
-						companies: [
-							{ name: '温州金融科技有限公司', area: 600 },
-							{ name: '温州网络科技有限公司', area: 550 },
-							{ name: '浙江数据科技有限公司', area: 550 }
-						],
-						prices: [
-							{ floor: '3-6层', rent: 65, payment: '季付' },
-							{ floor: '7-10层', rent: 85, payment: '季付' }
-						]
-					},
-					{
-						_id: '3',
-						name: '丽江公馆',
-						district: '瓯海区',
-						address: '丽江路120号',
-						LeasingArea: 5000,
-						OccupancyArea: 1800,
-						investmentStatus: '招租中',
-						image: '',
-						companies: [
-							{ name: '温州信息科技有限公司', area: 950 },
-							{ name: '浙江智能科技有限公司', area: 850 }
-						],
-						prices: [
-							{ floor: '4-8层', rent: 70, payment: '季付' },
-							{ floor: '9-15层', rent: 90, payment: '季付' }
-						]
-					}
-				]
+				projects: []
 			}
 		},
 		computed: {
@@ -190,8 +134,69 @@
 			},
 			async loadProjects() {
 				try {
-					// TODO: 调用云函数获取项目数据
+					// 调用云函数获取项目数据
+					const res = await uniCloud.callFunction({
+						name: 'db-query',
+						data: {
+							collectionName: 'Project_data',
+							query: {status: 'published'}
+						}
+					});
 					
+					if (res.result && res.result.code === 200 && res.result.data && res.result.data.data) {
+						// 获取项目数据
+						const projects = res.result.data.data;
+						
+						// 处理图片URL
+						for (const project of projects) {
+							// 确保数值字段为数字类型
+							project.LeasingArea = Number(project.LeasingArea) || 0;
+							project.OccupancyArea = Number(project.OccupancyArea) || 0;
+							
+							// 处理企业数据
+							if (project.companies && project.companies.length) {
+								project.companies.forEach(company => {
+									company.area = Number(company.area) || 0;
+								});
+							}
+							
+							// 处理价格数据
+							if (project.prices && project.prices.length) {
+								project.prices.forEach(price => {
+									price.rent = Number(price.rent) || 0;
+								});
+							}
+							
+							// 处理云存储图片URL
+							if (project.image && project.image.indexOf('cloud://') === 0) {
+								try {
+
+									const fileRes = await uniCloud.getTempFileURL({
+										fileList: [project.image]
+									});
+
+									if (fileRes.fileList && fileRes.fileList.length > 0) {
+										project.image = fileRes.fileList[0].tempFileURL;
+									}
+								} catch (e) {
+									console.error('获取图片URL失败:', e);
+								}
+							} else if (!project.image) {
+								console.log('项目图片为空');
+							}
+						}
+						
+						// 更新项目数据
+						this.projects = projects;
+						console.log('项目数据处理完成，共', this.projects.length, '条');
+						
+					} else {
+						console.error('项目数据格式错误', res.result);
+						uni.showToast({
+							title: '数据加载异常',
+							icon: 'none'
+						});
+					}
 				} catch (err) {
 					console.error('加载项目数据失败', err);
 					uni.showToast({
