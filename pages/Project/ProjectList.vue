@@ -23,7 +23,7 @@
 				<!-- 项目图片 -->
 				<view class="project-image">
 					<image :src="item.image || '/static/image/test.png'" mode="aspectFill"></image>
-					<view class="status-tag">{{ item.status }}</view>
+					<view class="status-tag">{{ item.investmentStatus }}</view>
 				</view>
 				
 				<!-- 项目信息 -->
@@ -31,8 +31,7 @@
 					<view class="project-title">{{ item.name }}</view>
 					<view class="project-address">{{ item.district }} {{ item.address }}</view>
 					<view class="project-data">
-						<text class="data-item">可租面积: {{ item.vacantArea }}㎡</text>
-						<text class="data-item">空置率: {{ item.vacancyRate }}%</text>
+						<text class="data-item">招租面积: {{ item.LeasingArea }}㎡</text>
 					</view>
 					
 					<!-- 内部信息（登录可见） -->
@@ -40,11 +39,23 @@
 						<view class="divider"></view>
 						<view class="company-info">
 							<text class="info-label">入驻企业：</text>
-							<text class="info-value">{{ item.companyCount }}家</text>
+							<text class="info-value">{{ item.companies ? item.companies.length : 0 }}家</text>
+						</view>
+						<view class="company-info">
+							<text class="info-label">入驻面积：</text>
+							<text class="info-value">{{ item.OccupancyArea }}㎡</text>
+						</view>
+						<view class="company-info">
+							<text class="info-label">可租面积：</text>
+							<text class="info-value">{{ getVacantArea(item) }}㎡</text>
+						</view>
+						<view class="company-info">
+							<text class="info-label">空置率：</text>
+							<text class="info-value">{{ getVacancyRate(item) }}%</text>
 						</view>
 						<view class="rent-info">
 							<text class="info-label">租金范围：</text>
-							<text class="info-value">{{ item.rentRange }}元/㎡/月</text>
+							<text class="info-value">{{ getRentRange(item) }}元/㎡/月</text>
 						</view>
 					</view>
 				</view>
@@ -71,36 +82,55 @@
 						name: '高联大厦',
 						district: '鹿城区',
 						address: '车站大道11号',
-						vacantArea: '2500',
-						vacancyRate: '35', //后续需要计算得出
-						status: '招租中',
+						LeasingArea: 4000,
+						OccupancyArea: 1500,
+						investmentStatus: '招租中',
 						image: '',
-						companyCount: '2', //后续需要计算得出
-						rentRange: '60-80' //后续需要计算得出
+						companies: [
+							{ name: '温州科技有限公司', area: 800 },
+							{ name: '西创科技有限公司', area: 700 }
+						],
+						prices: [
+							{ floor: '5-8层', rent: 60, payment: '季付' },
+							{ floor: '9-12层', rent: 80, payment: '季付' }
+						]
 					},
 					{
 						_id: '2',
 						name: '瑞丰大厦',
 						district: '鹿城区',
 						address: '解放路88号',
-						vacantArea: '1800',
-						vacancyRate: '20',
-						status: '招租中',
+						LeasingArea: 3500,
+						OccupancyArea: 1700,
+						investmentStatus: '招租中',
 						image: '',
-						companyCount: '3',
-						rentRange: '65-85'
+						companies: [
+							{ name: '温州金融科技有限公司', area: 600 },
+							{ name: '温州网络科技有限公司', area: 550 },
+							{ name: '浙江数据科技有限公司', area: 550 }
+						],
+						prices: [
+							{ floor: '3-6层', rent: 65, payment: '季付' },
+							{ floor: '7-10层', rent: 85, payment: '季付' }
+						]
 					},
 					{
 						_id: '3',
 						name: '丽江公馆',
 						district: '瓯海区',
 						address: '丽江路120号',
-						vacantArea: '3200',
-						vacancyRate: '45',
-						status: '招租中',
+						LeasingArea: 5000,
+						OccupancyArea: 1800,
+						investmentStatus: '招租中',
 						image: '',
-						companyCount: '2',
-						rentRange: '70-90'
+						companies: [
+							{ name: '温州信息科技有限公司', area: 950 },
+							{ name: '浙江智能科技有限公司', area: 850 }
+						],
+						prices: [
+							{ floor: '4-8层', rent: 70, payment: '季付' },
+							{ floor: '9-15层', rent: 90, payment: '季付' }
+						]
 					}
 				]
 			}
@@ -121,6 +151,31 @@
 			this.loadProjects();
 		},
 		methods: {
+			// 计算空置面积：招租面积 - 入驻面积
+			getVacantArea(item) {
+				return item.LeasingArea - item.OccupancyArea;
+			},
+			// 计算空置率：空置面积 / 招租面积 * 100
+			getVacancyRate(item) {
+				if (!item.LeasingArea || item.LeasingArea === 0) return 0;
+				const vacantArea = this.getVacantArea(item);
+				const rate = (vacantArea / item.LeasingArea * 100).toFixed(1);
+				return rate;
+			},
+			// 获取租金范围
+			getRentRange(item) {
+				if (!item.prices || item.prices.length === 0) return '暂无';
+				let minRent = Infinity;
+				let maxRent = 0;
+				
+				item.prices.forEach(price => {
+					if (price.rent < minRent) minRent = price.rent;
+					if (price.rent > maxRent) maxRent = price.rent;
+				});
+				
+				if (minRent === maxRent) return minRent;
+				return `${minRent}-${maxRent}`;
+			},
 			checkLoginStatus() {
 				const userData = uni.getStorageSync('User_data');
 				this.isLogin = userData && userData.account !== undefined;
@@ -135,16 +190,8 @@
 			},
 			async loadProjects() {
 				try {
-					// 这里可以替换为实际的云函数调用
-					// const res = await uniCloud.callFunction({
-					//   name: 'db-query',
-					//   data: {
-					//     collectionName: 'Project_data'
-					//   }
-					// });
-					// if (res.result && res.result.data) {
-					//   this.projects = res.result.data;
-					// }
+					// TODO: 调用云函数获取项目数据
+					
 				} catch (err) {
 					console.error('加载项目数据失败', err);
 					uni.showToast({

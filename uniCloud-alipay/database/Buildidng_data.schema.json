@@ -45,7 +45,7 @@
 		}
 	},
     "image": {
-      "bsonType": "file",
+      "bsonType": "string",
       "title": "楼栋照片"
     },
    "LeasingArea": {

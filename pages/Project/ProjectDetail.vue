@@ -14,20 +14,12 @@
 				<text class="value">{{ projectData.district }} {{ projectData.address }}</text>
 			</view>
 			<view class="info-item">
-				<text class="label">招租状态：</text>
-				<text class="value">{{ projectData.status }}</text>
+				<text class="label">招商状态：</text>
+				<text class="value">{{ projectData.investmentStatus }}</text>
 			</view>
 			<view class="info-item">
-				<text class="label">可租面积：</text>
-				<text class="value">{{ projectData.vacantArea }}㎡</text>
-			</view>
-			<view class="info-item">
-				<text class="label">空置率：</text>
-				<text class="value">{{ projectData.vacancyRate }}%</text>
-			</view>
-			<view class="info-item">
-				<text class="label">楼层情况：</text>
-				<text class="value">{{ projectData.floorInfo }}</text>
+				<text class="label">招租面积：</text>
+				<text class="value">{{ projectData.LeasingArea }}㎡</text>
 			</view>
 		</view>
 		
@@ -37,8 +29,25 @@
 			<view class="project-desc">{{ projectData.description }}</view>
 		</view>
 		
-		<!-- 入驻企业信息（仅登录用户可见） -->
+		<!-- 详细信息（仅登录用户可见） -->
 		<view class="info-card" v-if="isLogin">
+			<view class="card-title">详细信息</view>
+			<view class="info-item">
+				<text class="label">入驻面积：</text>
+				<text class="value">{{ projectData.OccupancyArea }}㎡</text>
+			</view>
+			<view class="info-item">
+				<text class="label">可租面积：</text>
+				<text class="value">{{ getVacantArea() }}㎡</text>
+			</view>
+			<view class="info-item">
+				<text class="label">空置率：</text>
+				<text class="value">{{ getVacancyRate() }}%</text>
+			</view>
+		</view>
+		
+		<!-- 入驻企业信息（仅登录用户可见） -->
+		<view class="info-card" v-if="isLogin && projectData.companies && projectData.companies.length > 0">
 			<view class="card-title">入驻企业信息</view>
 			<view class="company-list">
 				<view class="company-item" v-for="(company, index) in projectData.companies" :key="index">
@@ -52,12 +61,12 @@
 		</view>
 		
 		<!-- 租金价格（仅登录用户可见） -->
-		<view class="info-card" v-if="isLogin">
+		<view class="info-card" v-if="isLogin && projectData.prices && projectData.prices.length > 0">
 			<view class="card-title">租金价格</view>
 			<view class="price-list">
 				<view class="price-item" v-for="(price, index) in projectData.prices" :key="index">
 					<text class="floor-range">{{ price.floor }}</text>
-					<text class="price-value">{{ price.price }}元/㎡/月</text>
+					<text class="price-value">{{ price.rent }}元/㎡/月</text>
 					<text class="payment-method">{{ price.payment }}</text>
 				</view>
 			</view>
@@ -80,43 +89,37 @@
 					name: '高联大厦',
 					district: '鹿城区',
 					address: '车站大道11号',
-					status: '招租中',
-					vacantArea: '2500',
-					vacancyRate: '35',
-					floorInfo: '5-8层、12层可租',
+					investmentStatus: '招租中',
+					LeasingArea: 4000,
+					OccupancyArea: 1500,
 					description: '高联大厦位于温州市核心商圈，交通便利，配套完善。大厦总高25层，总建筑面积约3.5万平方米，是集办公、商业等多功能为一体的现代化商务大厦。',
 					image: '',
 					companies: [
 						{
 							name: '温州科技有限公司',
-							area: '800',
+							area: 800,
 							period: '2022-2025'
 						},
 						{
 							name: '西创科技有限公司',
-							area: '1200',
+							area: 700,
 							period: '2023-2026'
-						},
-						{
-							name: '浙江智能科技有限公司',
-							area: '650',
-							period: '2021-2024'
 						}
 					],
 					prices: [
 						{
 							floor: '5-8层',
-							price: '65',
+							rent: 65,
 							payment: '季付'
 						},
 						{
 							floor: '9-15层',
-							price: '75',
+							rent: 75,
 							payment: '季付'
 						},
 						{
 							floor: '16-25层',
-							price: '85',
+							rent: 85,
 							payment: '季付'
 						}
 					]
@@ -129,23 +132,25 @@
 			this.loadProjectDetail();
 		},
 		methods: {
+			// 计算空置面积：招租面积 - 入驻面积
+			getVacantArea() {
+				return this.projectData.LeasingArea - this.projectData.OccupancyArea;
+			},
+			// 计算空置率：空置面积 / 招租面积 * 100
+			getVacancyRate() {
+				if (!this.projectData.LeasingArea || this.projectData.LeasingArea === 0) return 0;
+				const vacantArea = this.getVacantArea();
+				const rate = (vacantArea / this.projectData.LeasingArea * 100).toFixed(1);
+				return rate;
+			},
 			checkLoginStatus() {
 				const userData = uni.getStorageSync('User_data');
 				this.isLogin = userData && userData.account !== undefined;
 			},
 			async loadProjectDetail() {
 				try {
-					// 这里替换为实际的云函数调用
-					// const res = await uniCloud.callFunction({
-					//   name: 'db-query',
-					//   data: {
-					//     collectionName: 'Project_data',
-					//     id: this.projectId
-					//   }
-					// });
-					// if (res.result && res.result.data) {
-					//   this.projectData = res.result.data;
-					// }
+					// TODO:调用云函数获取项目详情
+					
 				} catch (err) {
 					console.error('加载项目详情失败:', err);
 					uni.showToast({
