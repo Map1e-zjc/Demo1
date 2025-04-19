@@ -86,6 +86,19 @@ export default {
     // 标记点点击事件
     handleMarkerTap(e) {
       console.log('点击标记:', e.markerId)
+	  uni.showModal({
+	  	title: '确认',
+	  	  content: '进入查看' + e.tiitle +  '内部的项目？',
+	  	  success: (res) => {
+	  	    if (res.confirm) {
+	  	      uni.navigateTo({
+	  	      	url:"/pages/Fasttest/Fasttest"
+	  	      })
+	  	    } else if (res.cancel) {
+	  	      return;
+	  	    }
+	  	  }
+	  })
     }
   }
 }
