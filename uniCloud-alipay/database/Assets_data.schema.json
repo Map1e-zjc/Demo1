@@ -1,0 +1,53 @@
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": "role == 'admin'",
+		"update": "role == 'admin'",
+		"delete": "role == 'admin'"
+	},
+	"properties": {
+		"_id": {
+			"description": "资产ID"
+		},
+		"name": {
+			"bsonType": "string",
+			"description": "资产名称"
+		},
+		"address": {
+		  "bsonType": "string",
+		  "title": "资产地址",
+		  "minLength": 5,
+		  "maxLength": 200,
+		  "errorMessage": "地址长度需在5-200个字符之间"
+		},	
+		"image": {
+		  "bsonType": "string",
+		  "title": "资产照片"
+		},
+		"accuratePosition":{
+			"bsonType": "object",
+			"description": "精确位置",
+			"properties":
+			{
+				"longitude":
+				{
+					"bsonType": "double",
+					"description": "经度"
+				},
+				"latitude":
+				{
+					"bsonType": "double",
+					"description": "纬度"
+				}
+			}
+		},
+		"totalArea": {
+		  "bsonType": "double",
+		  "minimum": 0,
+		  "maximum": 10000,
+		  "title": "占地面积(㎡)"
+		}
+	}
+}
