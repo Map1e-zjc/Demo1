@@ -26,7 +26,24 @@
       "minLength": 5,
       "maxLength": 200,
       "errorMessage": "地址长度需在5-200个字符之间"
-    },
+    },	
+	"accuratePosition":{
+		"bsonType": "object",
+		"description": "精确位置",
+		"properties":
+		{
+			"longitude":
+			{
+				"bsonType": "double",
+				"description": "经度"
+			},
+			"latitude":
+			{
+				"bsonType": "double",
+				"description": "纬度"
+			}
+		}
+	},
     "image": {
       "bsonType": "file",
       "title": "楼栋照片"

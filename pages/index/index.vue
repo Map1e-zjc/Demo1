@@ -1,77 +1,98 @@
 <template>
   <view class="map-container">
     <map 
-      id="myMap"
-      style="width: 100%; height: 80vh;"
-      :latitude="latitude"
-      :longitude="longitude"
-      :scale="scale"
+      id="wzMap"
+      :latitude="28.007675"
+      :longitude="120.655421"
       :markers="markers"
-      :polygons="polygons"
-      include-points="{{polygons[0].points}}"
+      :scale="13"
+      style="width: 100%; height: 100vh"
       show-location
-      bindregionchange="onRegionChange"
-	  @tap="handleMapTap" 
-    ></map>
+      enable-traffic
+      @markertap="handleMarkerTap">
+    </map>
   </view>
-    <button @click="goToProductDetail" class="btn">快捷操作</button>
 </template>
 
 <script>
 export default {
   data() {
-    // 鹿城区与瓯海区合并后的边界坐标（示例值）
-    const minLat = 27.900, maxLat = 28.050;
-    const minLng = 120.600, maxLng = 120.800;
-
     return {
-      latitude: (minLat + maxLat) / 2, // 初始中心点
-      longitude: (minLng + maxLng) / 2,
-      scale: 12,
-      markers: [], // 原有标记点配置
-      polygons: [{
-        points: [
-          
-        ],
-        strokeWidth: 4,
-        strokeColor: "#007AFF",
-        fillColor: "#007AFF22"
-      }]
+      // 地图中心点（温州南站附近）
+      center: {
+        latitude: 28.007675,
+        longitude: 120.655421
+      },
+      
+      // 标记点数据（瓯海区 & 鹿城区）
+      markers: [
+        {
+          id: 1,
+          title: "瓯海区政府",
+          latitude: 28.01332,
+          longitude: 120.66874,
+          width: 24,    // 必须参数
+          height: 34,   // 必须参数
+          callout: {
+            content: "瓯海区政府",  // 常显信息窗
+            color: "#FFFFFF",
+            bgColor: "#1890FF",
+            borderRadius: 4,
+            padding: 8,
+            display: "ALWAYS"
+          }
+        },
+        {
+          id: 2,
+          title: "鹿城区政府",
+          latitude: 28.01085,
+          longitude: 120.70321,
+          width: 24,
+          height: 34,
+          callout: {
+            content: "鹿城区政府",
+			color: "#FFFFFF",
+            bgColor: "#52C41A",
+			borderRadius: 4,
+			padding: 8,
+            display: "ALWAYS"
+          }
+        },
+        // 其他标记点...
+        {
+          id: 15,
+          title: "温州南站",
+          latitude: 27.987397,
+          longitude: 120.694927,
+          width: 24,
+          height: 34,
+          callout: {
+            content: "温州南站（高铁站）",
+			color: "#FFFFFF",
+            bgColor: "#FA8C16",
+			borderRadius: 4,
+			padding: 8,
+            display: "ALWAYS"
+          }
+        }
+      ]
     }
   },
+  onLoad()
+  {
+	  
+  },
   methods: {
-    onRegionChange(e) {
-      if (e.type === 'end') {
-        const mapCtx = uni.createMapContext('myMap');
-        mapCtx.getCenterLocation({
-          success: (res) => {
-            const { minLat, maxLat, minLng, maxLng } = this.data.polygons[0];
-            if (res.latitude < minLat || res.latitude > maxLat || 
-                res.longitude < minLng || res.longitude > maxLng) {
-              mapCtx.moveToLocation({
-                latitude: (minLat + maxLat) / 2,
-                longitude: (minLng + maxLng) / 2
-              });
-            }
-          }
-        });
-      }
-    },
-	goToProductDetail() {
-		uni.navigateTo({
-			url:'/pages/Fasttest/Fasttest'
-		})
-	}
+    // 标记点点击事件
+    handleMarkerTap(e) {
+      console.log('点击标记:', e.markerId)
+    }
   }
 }
 </script>
+
 <style>
-.btn {
-  padding: 8px 16px;
-  background-color: #42b983;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.map-container {
+  position: relative;
 }
 </style>
