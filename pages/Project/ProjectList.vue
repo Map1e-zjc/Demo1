@@ -1,5 +1,12 @@
 <template>
 	<view class="project-container">
+		    <!-- 新增加载组件 -->
+		    <LoadingComponent 
+		      :isLoading="isLoading" 
+		      text="项目加载中"
+		      color="#2979FF"
+		      :size="40"
+		    />
 		<!-- 顶部标签页 -->
 		<view class="tab-header">
 			<view 
@@ -70,10 +77,15 @@
 </template>
 
 <script>
+	import LoadingComponent from '@/components/LoadingComponent.vue'
 	export default {
+		components: {
+		    LoadingComponent
+		  },
 		data() {
 			return {
 				isLogin: false,
+				isLoading : true,
 				currentTab: 0,
 				tabs: ['全部', '鹿城区', '瓯海区'],
 				projects: []
@@ -197,8 +209,10 @@
 							icon: 'none'
 						});
 					}
+					this.isLoading = false;
 				} catch (err) {
 					console.error('加载项目数据失败', err);
+					this.isLoading = false;
 					uni.showToast({
 						title: '加载数据失败',
 						icon: 'none'

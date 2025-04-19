@@ -221,6 +221,6 @@ export default
 
 <style>
 .btn {
-	margin: 10px;
+	margin: 10rpx;
 }
 </style>
