@@ -85,10 +85,13 @@ export default {
   methods: {
     // 标记点点击事件
     handleMarkerTap(e) {
-      console.log('点击标记:', e.markerId)
+	  const targetMarker = this.markers.find(
+	  item => item.id === e.markerId)
+	  if (targetMarker) console.log('找到标记点:', targetMarker.title)
+	  else console.error('未找到对应标记点', e.markerId)
 	  uni.showModal({
-	  	title: '确认',
-	  	  content: '进入查看' + e.tiitle +  '内部的项目？',
+	  	title: '',
+	  	  content: '查看' + targetMarker.title +  '项目细节？',
 	  	  success: (res) => {
 	  	    if (res.confirm) {
 	  	      uni.navigateTo({
