@@ -20,6 +20,23 @@
       "bsonType": "string",
       "description": "项目位置信息"
     },
+	"accuratePosition":{
+		"bsonType": "object",
+		"description": "精确位置",
+		"properties":
+		{
+			"longitude":
+			{
+				"bsonType": "double",
+				"description": "经度"
+			},
+			"latitude":
+			{
+				"bsonType": "double",
+				"description": "纬度"
+			}
+		}
+	},
     "description": {
       "bsonType": "string",
       "description": "项目描述"
