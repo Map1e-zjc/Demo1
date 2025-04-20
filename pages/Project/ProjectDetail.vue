@@ -2,7 +2,7 @@
 	<view class="detail-container">
 		<!-- 项目基本信息 -->
 		<view class="project-header">
-			<image class="project-image" :src="projectData.image" mode="aspectFill"></image>
+			<image class="project-image" :src="projectData.image" mode="aspectFill" :fade-show="false"></image>
 			<view class="project-title">{{ projectData.name }}</view>
 		</view>
 
@@ -85,12 +85,20 @@ export default {
 		return {
 			isLogin: false,
 			projectId: '',
-			projectData: {} // 初始为空对象
+			projectData: {}, // 初始为空对象
+			imageCache: {} // 图片缓存
 		}
 	},
 	onLoad(options) {
 		this.projectId = options.id;
 		this.checkLoginStatus();
+		
+		// 获取保存的图片缓存
+		const cachedImages = uni.getStorageSync('project_image_cache');
+		if (cachedImages) {
+			this.imageCache = cachedImages;
+		}
+		
 		this.loadProjectDetail();
 	},
 	methods: {
@@ -145,16 +153,20 @@ export default {
 					// 处理云存储图片URL
 					if (projectData.image && projectData.image.indexOf('cloud://') === 0) {
 						try {
-							console.log('处理项目详情图片:', projectData.image);
+							// 先检查缓存中是否已有图片URL
+							if (this.imageCache[projectData.image]) {
+								projectData.image = this.imageCache[projectData.image];
+							} else {
+								const fileRes = await uniCloud.getTempFileURL({
+									fileList: [projectData.image]
+								});
 
-							const fileRes = await uniCloud.getTempFileURL({
-								fileList: [projectData.image]
-							});
-
-							console.log('获取临时URL结果:', fileRes);
-
-							if (fileRes.fileList && fileRes.fileList.length > 0) {
-								projectData.image = fileRes.fileList[0].tempFileURL;
+								if (fileRes.fileList && fileRes.fileList.length > 0) {
+									// 更新缓存
+									this.imageCache[projectData.image] = fileRes.fileList[0].tempFileURL;
+									uni.setStorageSync('project_image_cache', this.imageCache);
+									projectData.image = fileRes.fileList[0].tempFileURL;
+								}
 							}
 						} catch (e) {
 							console.error('获取图片URL失败:', e);

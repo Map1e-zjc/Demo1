@@ -29,7 +29,12 @@
 			>
 				<!-- 项目图片 -->
 				<view class="project-image">
-					<image :src="item.image" mode="aspectFill"></image>
+					<image 
+						:src="item.image" 
+						mode="aspectFill"
+						:fade-show="false"
+						:lazy-load="true"
+					></image>
 					<view class="status-tag">{{ item.investmentStatus }}</view>
 				</view>
 				
@@ -88,7 +93,8 @@
 				isLoading : true,
 				currentTab: 0,
 				tabs: ['全部', '鹿城区', '瓯海区'],
-				projects: []
+				projects: [],
+				imageCache: {} // 新增图片缓存
 			}
 		},
 		computed: {
@@ -104,7 +110,11 @@
 		onShow() {
 			// 每次页面显示时检查登录状态
 			this.checkLoginStatus();
-			this.loadProjects();
+			// 如果数据为空才重新加载
+			if (this.projects.length === 0) {
+				this.isLoading = true;
+				this.loadProjects();
+			}
 		},
 		methods: {
 			// 计算空置面积：招租面积 - 入驻面积
@@ -182,12 +192,19 @@
 							// 处理云存储图片URL
 							if (project.image && project.image.indexOf('cloud://') === 0) {
 								try {
+									// 检查缓存中是否已有此图片的URL
+									if (this.imageCache[project.image]) {
+										project.image = this.imageCache[project.image];
+										continue;
+									}
 
 									const fileRes = await uniCloud.getTempFileURL({
 										fileList: [project.image]
 									});
 
 									if (fileRes.fileList && fileRes.fileList.length > 0) {
+										// 保存图片URL到缓存
+										this.imageCache[project.image] = fileRes.fileList[0].tempFileURL;
 										project.image = fileRes.fileList[0].tempFileURL;
 									}
 								} catch (e) {
@@ -201,6 +218,9 @@
 						// 更新项目数据
 						this.projects = projects;
 						console.log('项目数据处理完成，共', this.projects.length, '条');
+						
+						// 将图片缓存保存到本地，以便页面返回时使用
+						uni.setStorageSync('project_image_cache', this.imageCache);
 						
 					} else {
 						console.error('项目数据格式错误', res.result);
@@ -218,6 +238,13 @@
 						icon: 'none'
 					});
 				}
+			}
+		},
+		onLoad() {
+			// 加载已保存的图片缓存
+			const cachedImages = uni.getStorageSync('project_image_cache');
+			if (cachedImages) {
+				this.imageCache = cachedImages;
 			}
 		}
 	}
