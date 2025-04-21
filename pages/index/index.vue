@@ -41,14 +41,19 @@ export default {
   },
   onShow()
   {
-	  const centerdata = uni.getStorageSync('Center_data');
-	  if(centerdata != '')
-	  {
-		  this.latitude = centerdata.latitude;
-		  this.longitude = centerdata.longitude;
-	  }
+     this.fetchCenter()
   },
   methods: {
+	fetchCenter()
+	{
+		const centerdata = uni.getStorageSync('Center_data');
+		if(centerdata != '')
+		{
+		  this.latitude = centerdata.latitude;
+		  this.longitude = centerdata.longitude;
+		  uni.removeStorageSync('Center_data')
+		}
+	},
 	async fetchData()
 	{
 		try {
