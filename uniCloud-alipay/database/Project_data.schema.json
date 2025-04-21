@@ -16,9 +16,14 @@
       "bsonType": "string",
       "description": "项目名称"
     },
-    "location": {
+    "street": {
       "bsonType": "string",
-      "description": "项目位置信息"
+      "description": "街道名称",
+      "title": "街道"
+    },
+    "address": {
+      "bsonType": "string",
+      "description": "详细地址"
     },
 	"accuratePosition":{
 		"bsonType": "object",
@@ -45,6 +50,7 @@
       "bsonType": "string",
       "description": "城区名"
     },
+    
     "status": {
       "bsonType": "string",
       "title": "发布状态",
