@@ -3,7 +3,7 @@
 		    <!-- 新增加载组件 -->
 		    <LoadingComponent 
 		      :isLoading="isLoading" 
-		      text="项目加载中"
+		      text="项目列表加载中"
 		      color="#2979FF"
 		      :size="40"
 		    />

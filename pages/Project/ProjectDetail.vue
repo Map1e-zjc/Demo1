@@ -1,5 +1,11 @@
 <template>
 	<view class="detail-container">
+		<LoadingComponent
+		  :isLoading="isLoading" 
+		  text="项目内容加载中"
+		  color="#2979FF"
+		  :size="40"
+		/>
 		<!-- 项目基本信息 -->
 		<view class="project-header">
 			<image class="project-image" :src="projectData.image" mode="aspectFill" :fade-show="false"></image>
@@ -80,13 +86,15 @@
 </template>
 
 <script>
+import LoadingComponent from '@/components/LoadingComponent.vue'
 export default {
 	data() {
 		return {
 			isLogin: false,
 			projectId: '',
 			projectData: {}, // 初始为空对象
-			imageCache: {} // 图片缓存
+			imageCache: {} ,// 图片缓存
+			isLoading:true,
 		}
 	},
 	onLoad(options) {
@@ -127,7 +135,6 @@ export default {
 						query: { _id: this.projectId }
 					}
 				});
-
 				if (res.result && res.result.code === 200 && res.result.data && res.result.data.data && res.result.data.data.length > 0) {
 					// 获取项目详情
 					const projectData = res.result.data.data[0];
@@ -174,7 +181,7 @@ export default {
 					} else if (!projectData.image) {
 						console.log('项目图片为空');
 					}
-
+					this.centerdata = res.result.data.data[0].accuratePosition;
 					// 更新项目数据
 					this.projectData = projectData;
 
@@ -189,6 +196,7 @@ export default {
 						uni.navigateBack();
 					}, 1500);
 				}
+				this.isLoading = false;
 			} catch (err) {
 				console.error('加载项目详情失败:', err);
 				uni.showToast({
@@ -201,10 +209,21 @@ export default {
 				}, 1500);
 			}
 		},
-		// 处理导航
 		handleNavigation() {
-			// TODO: 实现导航功能
-			console.log('导航到地址:', this.projectData.address);
+			uni.showModal({
+				title: '',
+				  content: '进入地图页面?',
+				  success: (res) => {
+				    if (res.confirm) {
+					 uni.setStorageSync('Center_data',this.centerdata)
+				     uni.switchTab({
+				     	url: '/pages/Index/Index'
+				     });
+				    } else if (res.cancel) {
+				      return;
+				    }
+				  }
+			})
 		}
 	}
 }

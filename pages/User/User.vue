@@ -12,21 +12,21 @@
 		</view>
 		
 		<view class="menu-list">
-			<navigator url="/pages/User/AboutUs">
+			<navigator url="/pages/Admin/InsertProject" v-if="isLogin">
 				<view class="menu-item">
 					<view class="menu-left">
 						<image src="/static/other_icons/edit.png" class="menu-icon"></image>
-						<text class="menu-text">跳转1</text>
+						<text class="menu-text">进入后台新增项目</text>
 					</view>
 					<image src="/static/other_icons/arrow.png" class="arrow"></image>
 				</view>
 			</navigator>
 			
-			<navigator url="/pages/User/Login">
+			<navigator url="/pages/Admin/ManageProject" v-if="isLogin">
 				<view class="menu-item">
 					<view class="menu-left">
 						<image src="/static/other_icons/label.png" class="menu-icon"></image>
-						<text class="menu-text">跳转2</text>
+						<text class="menu-text">管理项目表</text>
 					</view>
 					<image src="/static/other_icons/arrow.png" class="arrow"></image>
 				</view>
@@ -66,6 +66,8 @@ export default {
 					  content: '确认取消管理员身份并进入重新输入信息吗',
 					  success: (res) => {
 					    if (res.confirm) {
+						  uni.removeStorageSync('User_data');
+						  this.isLogin = false;
 					      uni.navigateTo({
 					      	url:"/pages/User/Login"
 					      })
