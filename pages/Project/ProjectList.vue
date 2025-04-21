@@ -19,8 +19,35 @@
 			</view>
 		</view>
 		
+		<!-- 街道筛选器，当选择了特定区域时显示 -->
+		<view class="street-filter" v-if="currentTab > 0">
+			<view class="filter-header" @click="toggleStreetDropdown">
+				<text class="filter-title">{{ selectedStreet || '全部街道' }}</text>
+				<text class="filter-icon" :class="{ 'rotate': showStreetDropdown }">▼</text>
+			</view>
+			<!-- 街道下拉列表 -->
+			<view class="street-dropdown" v-if="showStreetDropdown">
+				<view 
+					class="street-item" 
+					@click="selectStreet('')"
+					:class="{ 'active': selectedStreet === '' }"
+				>
+					全部街道
+				</view>
+				<view 
+					v-for="(street, index) in availableStreets" 
+					:key="index"
+					class="street-item"
+					:class="{ 'active': selectedStreet === street }"
+					@click="selectStreet(street)"
+				>
+					{{ street }}
+				</view>
+			</view>
+		</view>
+		
 		<!-- 项目列表 -->
-		<scroll-view scroll-y class="project-list">
+		<scroll-view scroll-y class="project-list" :class="{ 'with-filter': currentTab > 0 }">
 			<view 
 				v-for="(item, index) in filteredProjects" 
 				:key="index"
@@ -41,7 +68,7 @@
 				<!-- 项目信息 -->
 				<view class="project-info">
 					<view class="project-title">{{ item.name }}</view>
-					<view class="project-address">{{ item.district }} {{ item.address }}</view>
+					<view class="project-address">{{ item.district }} {{ item.street || '' }} {{ item.address }}</view>
 					<view class="project-data">
 						<text class="data-item">招租面积: {{ item.LeasingArea }}㎡</text>
 					</view>
@@ -94,17 +121,37 @@
 				currentTab: 0,
 				tabs: ['全部', '鹿城区', '瓯海区'],
 				projects: [],
-				imageCache: {} // 新增图片缓存
+				imageCache: {}, // 新增图片缓存
+				selectedStreet: '', // 当前选择的街道
+				showStreetDropdown: false, // 是否显示街道下拉菜单
+				streetsMap: {}, // 存储从数据库获取的街道信息，格式 {district: [street1, street2, ...]}
 			}
 		},
 		computed: {
-			filteredProjects() {
-				if (this.currentTab === 0) {
-					return this.projects;
-				} else {
+			// 根据当前选择的区域返回可用的街道列表
+			availableStreets() {
+				if (this.currentTab > 0) {
 					const district = this.tabs[this.currentTab];
-					return this.projects.filter(item => item.district === district);
+					return this.streetsMap[district] || [];
 				}
+				return [];
+			},
+			// 按区域和街道过滤项目
+			filteredProjects() {
+				let result = this.projects;
+				
+				// 首先按区域过滤
+				if (this.currentTab > 0) {
+					const district = this.tabs[this.currentTab];
+					result = this.projects.filter(item => item.district === district);
+					
+					// 如果选择了街道，继续过滤
+					if (this.selectedStreet) {
+						result = result.filter(item => item.street === this.selectedStreet);
+					}
+				}
+				
+				return result;
 			}
 		},
 		onShow() {
@@ -148,11 +195,49 @@
 			},
 			switchTab(index) {
 				this.currentTab = index;
+				// 切换标签时重置街道选择
+				this.selectedStreet = '';
+				this.showStreetDropdown = false;
+			},
+			// 切换街道下拉菜单的显示状态
+			toggleStreetDropdown() {
+				this.showStreetDropdown = !this.showStreetDropdown;
+			},
+			// 选择街道
+			selectStreet(street) {
+				this.selectedStreet = street;
+				this.showStreetDropdown = false;
 			},
 			goToDetail(id) {
 				uni.navigateTo({
 					url: `/pages/Project/ProjectDetail?id=${id}`
 				});
+			},
+			// 从项目数据中提取街道信息
+			extractStreetsFromProjects(projects) {
+				const streetsMap = {};
+				
+				projects.forEach(project => {
+					// 如果项目有区域和街道信息
+					if (project.district && project.street) {
+						// 如果这个区域还没有在映射表中，先初始化一个空数组
+						if (!streetsMap[project.district]) {
+							streetsMap[project.district] = [];
+						}
+						
+						// 如果这个街道还没有被添加到区域的街道列表中，则添加
+						if (!streetsMap[project.district].includes(project.street)) {
+							streetsMap[project.district].push(project.street);
+						}
+					}
+				});
+				
+				// 对每个区域的街道进行排序
+				for (const district in streetsMap) {
+					streetsMap[district].sort();
+				}
+				
+				return streetsMap;
 			},
 			async loadProjects() {
 				try {
@@ -161,7 +246,11 @@
 						name: 'db-query',
 						data: {
 							collectionName: 'Project_data',
-							query: {status: 'published'}
+							query: {status: 'published'},
+							// 只查询需要的字段，添加street字段
+							options: {
+								fields: '_id,name,district,street,address,LeasingArea,companies,OccupancyArea,prices,image,investmentStatus'
+							}
 						}
 					});
 					
@@ -169,7 +258,7 @@
 						// 获取项目数据
 						const projects = res.result.data.data;
 						
-						// 处理图片URL
+						// 处理图片URL和数据格式
 						for (const project of projects) {
 							// 确保数值字段为数字类型
 							project.LeasingArea = Number(project.LeasingArea) || 0;
@@ -214,6 +303,10 @@
 								console.log('项目图片为空');
 							}
 						}
+						
+						// 从项目数据中提取街道信息
+						this.streetsMap = this.extractStreetsFromProjects(projects);
+						console.log('街道信息提取完成:', this.streetsMap);
 						
 						// 更新项目数据
 						this.projects = projects;
@@ -289,9 +382,68 @@
 	background-color: #2979FF;
 }
 
+/* 街道筛选器样式 */
+.street-filter {
+	background-color: #fff;
+	border-bottom: 1rpx solid #eee;
+	position: relative;
+	z-index: 10;
+}
+
+.filter-header {
+	height: 80rpx;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 30rpx;
+}
+
+.filter-title {
+	font-size: 28rpx;
+	color: #333;
+}
+
+.filter-icon {
+	font-size: 24rpx;
+	color: #999;
+	transition: transform 0.3s;
+}
+
+.filter-icon.rotate {
+	transform: rotate(180deg);
+}
+
+.street-dropdown {
+	position: absolute;
+	width: 100%;
+	background-color: #fff;
+	box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+	z-index: 11;
+	max-height: 480rpx;
+	overflow-y: auto;
+}
+
+.street-item {
+	height: 80rpx;
+	line-height: 80rpx;
+	padding: 0 30rpx;
+	font-size: 28rpx;
+	color: #333;
+	border-bottom: 1rpx solid #f5f5f5;
+}
+
+.street-item.active {
+	color: #2979FF;
+	background-color: #f5f7ff;
+}
+
 .project-list {
 	flex: 1;
 	padding: 20rpx;
+}
+
+.project-list.with-filter {
+	padding-top: 20rpx;
 }
 
 .project-card {
