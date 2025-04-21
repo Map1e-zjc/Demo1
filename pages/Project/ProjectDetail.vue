@@ -1,5 +1,11 @@
 <template>
 	<view class="detail-container">
+		<LoadingComponent
+		  :isLoading="isLoading" 
+		  text="项目内容加载中"
+		  color="#2979FF"
+		  :size="40"
+		/>
 		<!-- 项目基本信息 -->
 		<view class="project-header">
 			<image class="project-image" :src="projectData.image" mode="aspectFill" :fade-show="false"></image>
@@ -80,13 +86,15 @@
 </template>
 
 <script>
+import LoadingComponent from '@/components/LoadingComponent.vue'
 export default {
 	data() {
 		return {
 			isLogin: false,
 			projectId: '',
 			projectData: {}, // 初始为空对象
-			imageCache: {} // 图片缓存
+			imageCache: {} ,// 图片缓存
+			isLoading:true,
 		}
 	},
 	onLoad(options) {
@@ -189,6 +197,7 @@ export default {
 						uni.navigateBack();
 					}, 1500);
 				}
+				this.isLoading = false;
 			} catch (err) {
 				console.error('加载项目详情失败:', err);
 				uni.showToast({
