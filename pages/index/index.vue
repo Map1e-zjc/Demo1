@@ -8,12 +8,11 @@
 	  />
 	<map 
 	  id="wzMap"
-	  :latitude="28.007675"
-	  :longitude="120.655421"
+	  :latitude="latitude"
+	  :longitude="longitude"
 	  :markers="markers"
 	  :scale="13"
 	  style="width: 100%; height: 100vh"
-	  show-location
 	  enable-traffic
 	  @markertap="handleMarkerTap">
 	</map>
@@ -26,10 +25,8 @@ export default {
   data() {
     return {
       // 地图中心点（温州南站附近）
-      center: {
-        latitude: 28.007675,
-        longitude: 120.655421
-      },
+      latitude: 28.007675,
+      longitude: 120.655421,
       isLoading:true,
       // 标记点数据（瓯海区 & 鹿城区）
       markers: []
@@ -41,6 +38,15 @@ export default {
   onLoad()
   {
 	  this.fetchData()
+  },
+  onShow()
+  {
+	  const centerdata = uni.getStorageSync('Center_data');
+	  if(centerdata != '')
+	  {
+		  this.latitude = centerdata.latitude;
+		  this.longitude = centerdata.longitude;
+	  }
   },
   methods: {
 	async fetchData()

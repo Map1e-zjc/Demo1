@@ -135,7 +135,6 @@ export default {
 						query: { _id: this.projectId }
 					}
 				});
-
 				if (res.result && res.result.code === 200 && res.result.data && res.result.data.data && res.result.data.data.length > 0) {
 					// 获取项目详情
 					const projectData = res.result.data.data[0];
@@ -182,7 +181,7 @@ export default {
 					} else if (!projectData.image) {
 						console.log('项目图片为空');
 					}
-
+					this.centerdata = res.result.data.data[0].accuratePosition;
 					// 更新项目数据
 					this.projectData = projectData;
 
@@ -210,10 +209,21 @@ export default {
 				}, 1500);
 			}
 		},
-		// 处理导航
 		handleNavigation() {
-			// TODO: 实现导航功能
-			console.log('导航到地址:', this.projectData.address);
+			uni.showModal({
+				title: '',
+				  content: '进入地图页面?',
+				  success: (res) => {
+				    if (res.confirm) {
+					 uni.setStorageSync('Center_data',this.centerdata)
+				     uni.switchTab({
+				     	url: '/pages/Index/Index'
+				     });
+				    } else if (res.cancel) {
+				      return;
+				    }
+				  }
+			})
 		}
 	}
 }
