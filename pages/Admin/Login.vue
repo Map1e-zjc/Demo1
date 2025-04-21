@@ -16,15 +16,11 @@
       <button v-if="!isLogin" form-type="submit" class="login-btn" :disabled="!form.account || !form.password">
         管理员登录
       </button>
-      <button @tap="exitManager" v-if="isLogin" class="exit-btn">
-        退出管理员模式
-      </button>
     </form>
   </view>
 </template>
 
 <script>
-const app = getApp()
 export default {
 
   data() {
@@ -39,18 +35,6 @@ export default {
   methods: {
     onload() {
 
-    },
-    onpageshow() {
-      if (app.globalData.isLogin == undefined) this.isLogin = false, app.globalData.isLogin = false;
-      else this.isLogin = app.globalData.isLogin;
-    },
-    exitManager() {
-      uni.showToast({
-        title: '退出成功，已恢复游客身份',
-        icon: 'none'
-      });
-      app.globalData.isLogin = false;
-      this.isLogin = false;
     },
     async handleLogin() {
       try {
@@ -69,17 +53,13 @@ export default {
             title: '登录成功，已获得管理员权限',
             icon: 'none'
           });
-          this.isLogin = true;
-          app.globalData.isLogin = true;
           const user = {};
           user.account = this.form.account,
-            user.password = this.form.password,
-            uni.setStorageSync('User_data', user);
-
-          // 登录成功后返回User页面
-          setTimeout(() => {
-            uni.navigateBack();
-          }, 1500);
+          user.password = this.form.password,
+		  uni.setStorageSync('User_data', user);
+		  uni.navigateTo({
+		  	url:"/pages/Admin/Admin"
+		  })
         }
       } catch (err) {
         console.log(this.isLogin)

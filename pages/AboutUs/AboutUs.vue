@@ -11,17 +11,17 @@
 				</view>
 				<view class="info-content">
 					<view class="label">招商热线</view>
-					<view class="value">0577-88123456</view>
+					<view class="value">0577-58699829</view>
 				</view>
 			</view>
 			
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/people.png" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/people.png" @click="goToLogin()" class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">联系人</view>
-					<view class="value">张经理</view>
+					<view class="value">潘女士</view>
 				</view>
 			</view>
 			
@@ -37,7 +37,7 @@
 			
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/address.png" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/address.png"  @click="check()" class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">公司地址</view>
@@ -46,14 +46,48 @@
 			</view>
 		</view>
 		
-		<view class="feedback-btn">
+		<button @click="goToFeedBack()" class="feedback-btn">
 			意见反馈
-		</view>
+		</button>
+		<button @click="goToAdminFast()" class="feedback-btn">
+			临时直通管理页面通道
+		</button>
 	</view>
 </template>
 
-<script setup>
-	
+<script>
+	export default {
+		data() {
+			return {
+				toAdmin : false
+			}
+		},
+		methods: {
+			goToAdminFast()
+			{
+				uni.navigateTo({
+					url: "/pages/Admin/Admin"
+				});
+			},
+			goToFeedBack() {
+				uni.navigateTo({
+					url: "/pages/AboutUs/FeedBack"
+				});
+			},
+			check(){
+				this.toAdmin = true;
+				console.log("this.toAdmin = true");
+			},
+			goToLogin() {
+				if(this.toAdmin)
+				{
+					uni.navigateTo({
+						url: "/pages/Admin/Login"
+					});
+				}
+			},
+		}
+	}
 </script>
 
 <style scoped>

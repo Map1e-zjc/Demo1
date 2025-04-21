@@ -22,21 +22,14 @@
 			}
 		},
 		{
-			"path" : "pages/User/User",
-			"style" : 
-			{
-				"navigationBarTitleText" : ""
-			}
-		},
-		{
-			"path" : "pages/User/AboutUs",
+			"path" : "pages/AboutUs/AboutUs",
 			"style" : 
 			{
 				"navigationBarTitleText" : "关于我们"
 			}
 		},
 		{
-			"path" : "pages/User/Login",
+			"path" : "pages/Admin/Login",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -58,6 +51,13 @@
 		},
 		{
 			"path" : "pages/Admin/ManageProject",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
+			"path" : "pages/Admin/Admin",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
@@ -90,8 +90,8 @@
 	        "selectedIconPath": "/static/tabbar/project-on.png"
 	      },
 	      {
-	        "pagePath": "pages/User/User",
-	        "text": "我的",
+	        "pagePath": "pages/AboutUs/AboutUs",
+	        "text": "关于我们",
 	        "iconPath": "/static/tabbar/user-off.png",
 	        "selectedIconPath": "/static/tabbar/user-on.png"
 	      }
