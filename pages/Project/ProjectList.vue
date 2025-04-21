@@ -177,11 +177,11 @@
 			},
 			// 获取租金范围
 			getRentRange(item) {
-				if (!item.prices || item.prices.length === 0) return '暂无';
+				if (!item.rentalDetails || item.rentalDetails.length === 0) return '暂无';
 				let minRent = Infinity;
 				let maxRent = 0;
 				
-				item.prices.forEach(price => {
+				item.rentalDetails.forEach(price => {
 					if (price.rent < minRent) minRent = price.rent;
 					if (price.rent > maxRent) maxRent = price.rent;
 				});
@@ -249,7 +249,7 @@
 							query: {status: 'published'},
 							// 只查询需要的字段，添加street字段
 							options: {
-								fields: '_id,name,district,street,address,LeasingArea,companies,OccupancyArea,prices,image,investmentStatus'
+								fields: '_id,name,district,street,address,LeasingArea,companies,OccupancyArea,rentalDetails,image,investmentStatus'
 							}
 						}
 					});
@@ -271,10 +271,13 @@
 								});
 							}
 							
-							// 处理价格数据
-							if (project.prices && project.prices.length) {
-								project.prices.forEach(price => {
+							// 处理招租详情数据
+							if (project.rentalDetails && project.rentalDetails.length) {
+								project.rentalDetails.forEach(price => {
 									price.rent = Number(price.rent) || 0;
+									if (price.vacantArea) {
+										price.vacantArea = Number(price.vacantArea) || 0;
+									}
 								});
 							}
 							

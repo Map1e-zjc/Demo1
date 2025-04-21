@@ -17,7 +17,7 @@
 			<view class="card-title">基本信息</view>
 			<view class="info-item">
 				<text class="label">地址：</text>
-				<text class="value">{{ projectData.district }} {{ projectData.address }}</text>
+				<text class="value">{{ projectData.district }} {{ projectData.street || '' }} {{ projectData.address }}</text>
 			</view>
 			<view class="info-item">
 				<text class="label">招商状态：</text>
@@ -52,30 +52,42 @@
 			</view>
 		</view>
 
-		<!-- 入驻企业信息（仅登录用户可见） -->
-		<view class="info-card" v-if="isLogin && projectData.companies && projectData.companies.length > 0">
-			<view class="card-title">入驻企业信息</view>
-			<view class="company-list">
-				<view class="company-item" v-for="(company, index) in projectData.companies" :key="index">
-					<view class="company-info">
-						<text class="company-name">{{ company.name }}</text>
-						<text class="company-area">入驻面积：{{ company.area }}㎡</text>
-						<text class="company-period">租期：{{ company.period }}</text>
-					</view>
+		<!-- 招租详情（仅登录用户可见）- 整合了租金和入驻企业信息 -->
+		<view class="info-card" v-if="isLogin && (projectData.rentalDetails && projectData.rentalDetails.length > 0 || projectData.companies && projectData.companies.length > 0)">
+			<view class="card-title">招租详情</view>
+			
+			<!-- 招租信息表格 -->
+			<view class="section-title" v-if="projectData.rentalDetails && projectData.rentalDetails.length > 0">招租信息</view>
+			<view class="rental-table" v-if="projectData.rentalDetails && projectData.rentalDetails.length > 0">
+				<view class="rental-header">
+					<text class="column building">楼栋</text>
+					<text class="column floor">楼层</text>
+					<text class="column area">空置面积</text>
+					<text class="column price">租金价格</text>
+				</view>
+				<view class="rental-item" v-for="(price, index) in projectData.rentalDetails" :key="index">
+					<text class="column building">{{ price.building || '-' }}</text>
+					<text class="column floor">{{ price.floor }}</text>
+					<text class="column area">{{ price.vacantArea }}㎡</text>
+					<text class="column price highlight">{{ price.rent }}元/㎡/月</text>
 				</view>
 			</view>
-		</view>
-
-		<!-- 租金价格（仅登录用户可见） -->
-		<view class="info-card" v-if="isLogin && projectData.prices && projectData.prices.length > 0">
-			<view class="card-title">租金价格</view>
-			<view class="price-list">
-				<view class="price-item" v-for="(price, index) in projectData.prices" :key="index">
-					<text class="floor-range">{{ price.floor }}</text>
-					<text class="price-value">{{ price.rent }}元/㎡/月</text>
-					<text class="payment-method">{{ price.payment }}</text>
+			<view class="no-data" v-if="!projectData.rentalDetails || projectData.rentalDetails.length === 0">暂无招租信息</view>
+			
+			<!-- 入驻企业信息列表 -->
+			<view class="section-divider"></view>
+			<view class="section-title" v-if="projectData.companies && projectData.companies.length > 0">入驻企业</view>
+			<view class="company-table" v-if="projectData.companies && projectData.companies.length > 0">
+				<view class="company-header">
+					<text class="company-column name-col">企业名称</text>
+					<text class="company-column area-col">入驻面积</text>
+				</view>
+				<view class="company-row" v-for="(company, index) in projectData.companies" :key="index">
+					<text class="company-column name-col">{{ company.name }}</text>
+					<text class="company-column area-col highlight">{{ company.area }}㎡</text>
 				</view>
 			</view>
+			<view class="no-data" v-if="!projectData.companies || projectData.companies.length === 0">暂无入驻企业</view>
 		</view>
 
 		<!-- 底部导航按钮 -->
@@ -151,9 +163,12 @@ export default {
 					}
 
 					// 处理价格数据
-					if (projectData.prices && projectData.prices.length) {
-						projectData.prices.forEach(price => {
+					if (projectData.rentalDetails && projectData.rentalDetails.length) {
+						projectData.rentalDetails.forEach(price => {
 							price.rent = Number(price.rent) || 0;
+							if (price.vacantArea) {
+								price.vacantArea = Number(price.vacantArea) || 0;
+							}
 						});
 					}
 
@@ -273,6 +288,19 @@ export default {
 	padding-left: 20rpx;
 }
 
+.section-title {
+	font-size: 30rpx;
+	font-weight: bold;
+	color: #555;
+	margin: 30rpx 0 15rpx 0;
+}
+
+.section-divider {
+	height: 20rpx;
+	margin: 20rpx 0;
+	border-bottom: 1px dashed #eee;
+}
+
 .info-item {
 	display: flex;
 	margin-bottom: 16rpx;
@@ -315,53 +343,125 @@ export default {
 	gap: 10rpx;
 }
 
+.company-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .company-name {
 	font-size: 30rpx;
 	color: #333;
 	font-weight: 500;
 }
 
-.company-area,
+.company-area {
+	font-size: 28rpx;
+}
+
 .company-period {
 	font-size: 26rpx;
 	color: #666;
 }
 
-.price-list {
-	margin-top: 20rpx;
+/* 招租详情表格样式 */
+.rental-table {
+	width: 100%;
+	border-top: 1rpx solid #eee;
+	border-left: 1rpx solid #eee;
+	margin-bottom: 20rpx;
 }
 
-.price-item {
+.rental-header, .rental-item {
 	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 20rpx 0;
+	width: 100%;
 	border-bottom: 1rpx solid #eee;
 }
 
-.price-item:last-child {
-	border-bottom: none;
+.rental-header {
+	background-color: #f9f9f9;
+	font-weight: 500;
 }
 
-.floor-range {
-	font-size: 28rpx;
-	color: #333;
-	width: 200rpx;
+.column {
+	padding: 20rpx 10rpx;
+	font-size: 26rpx;
+	text-align: center;
+	border-right: 1rpx solid #eee;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
-.price-value {
-	font-size: 32rpx;
+.building {
+	width: 20%;
+}
+
+.floor {
+	width: 20%;
+}
+
+.area {
+	width: 25%;
+}
+
+.price {
+	width: 35%;
+}
+
+/* 企业信息表格样式 */
+.company-table {
+	width: 100%;
+	border-top: 1rpx solid #eee;
+	border-left: 1rpx solid #eee;
+	margin-bottom: 20rpx;
+}
+
+.company-header, .company-row {
+	display: flex;
+	width: 100%;
+	border-bottom: 1rpx solid #eee;
+}
+
+.company-header {
+	background-color: #f9f9f9;
+	font-weight: 500;
+}
+
+.company-column {
+	padding: 20rpx 10rpx;
+	font-size: 26rpx;
+	text-align: center;
+	border-right: 1rpx solid #eee;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.name-col {
+	width: 60%;
+	text-align: left;
+	padding-left: 20rpx;
+}
+
+.area-col {
+	width: 40%;
+}
+
+.period-col {
+	width: 35%;
+}
+
+.highlight {
 	color: #FF6B6B;
 	font-weight: 500;
-	flex: 1;
-	text-align: center;
 }
 
-.payment-method {
-	font-size: 26rpx;
-	color: #666;
-	width: 120rpx;
-	text-align: right;
+.no-data {
+	text-align: center;
+	padding: 30rpx 0;
+	color: #999;
+	font-size: 28rpx;
 }
 
 .nav-button-container {

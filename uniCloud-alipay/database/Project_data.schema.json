@@ -104,17 +104,13 @@
           "area": {
             "bsonType": "double",
             "description": "入驻面积"
-          },
-          "period": {
-            "bsonType": "string",
-            "description": "入驻时间段"
           }
         }
       }
     },
-    "prices": {
+    "rentalDetails": {
       "bsonType": "array",
-      "title": "租金信息(加密)",
+      "title": "招租详情(加密)",
       "permission": {
         "read": "role == 'admin'",
         "write": "role == 'admin'"
@@ -122,17 +118,21 @@
       "items": {
         "bsonType": "object",
         "properties": {
+          "building": {
+            "bsonType": "string",
+            "description": "楼栋"
+          },
           "floor": {
             "bsonType": "string",
-            "description": "具体楼层"
+            "description": "楼层"
+          },
+          "vacantArea": {
+            "bsonType": "double",
+            "description": "空置面积(㎡)"
           },
           "rent": {
             "bsonType": "double",
             "description": "租金(元/㎡/月)"
-          },
-          "payment": {
-            "bsonType": "string",
-            "description": "支付方式"
           }
         }
       }
