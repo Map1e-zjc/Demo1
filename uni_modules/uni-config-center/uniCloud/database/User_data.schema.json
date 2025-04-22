@@ -1,0 +1,29 @@
+{
+  "bsonType": "object",
+  "required": ["account"],
+  "permission": {
+    "read": "doc.isAdmin",
+    "create": "doc.isAdmin",
+    "update": "doc.isAdmin",
+    "delete": false
+  },
+  "properties": {
+    "_id": {
+      "description": "用户ID"
+    },
+    "account": {
+      "description": "管理员账号",
+      "bsonType": "string",
+      "unique": true
+    },
+    "password": {
+      "bsonType": "string",
+      "description": "加密后的密码"
+    },
+    "isAdmin": {
+      "bsonType": "bool",
+      "defaultValue": true,
+      "description": "管理员标识"
+    }
+  }
+}

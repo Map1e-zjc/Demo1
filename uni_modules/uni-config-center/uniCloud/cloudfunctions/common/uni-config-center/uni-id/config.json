@@ -1,0 +1,5 @@
+{
+  "passwordSecret": "自定义加密密钥",
+  "tokenSecret": "自定义token密钥",
+  "tokenExpiresIn": 7200
+}
