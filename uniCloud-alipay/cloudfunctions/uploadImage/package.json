@@ -1,7 +1,0 @@
-{
-  "name": "uploadImage",
-  "dependencies": {},
-  "extensions": {
-    "uni-cloud-jql": {}
-  }
-}

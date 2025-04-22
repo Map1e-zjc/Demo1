@@ -1,7 +1,0 @@
-{
-  "name": "db-add",
-  "dependencies": {},
-  "extensions": {
-    "uni-cloud-jql": {}
-  }
-}
