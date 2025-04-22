@@ -4,7 +4,7 @@
 		<view class="project-header">
 			<image 
 			  class="project-image" 
-			  :src="projectData.image" 
+			  :src="processedImageUrl" 
 			  mode="aspectFill"
 			  @error="handleImageError"
 			  :fade-show="false"
@@ -99,7 +99,7 @@ export default {
 		return {
 			isLogin: true,
 			projectData: {}, // 初始为空对象
-			imageCache: {} ,// 图片缓存
+			processedImageUrl: '' // 经过处理的图片URL
 		}
 	},
 	onLoad() {
@@ -108,39 +108,54 @@ export default {
 	methods: {
 		async getData() {
 		  const previewData = uni.getStorageSync('Preview_data');
-		  const cachedImages = uni.getStorageSync('project_image_cache');
-		  if (cachedImages) {
-		  	this.imageCache = cachedImages;
+		  
+		  if (!previewData) {
+		    console.error('未找到预览数据');
+		    this.projectData = {};
+		    return;
 		  }
+		  
 		  // 深拷贝避免数据污染
 		  this.projectData = JSON.parse(JSON.stringify(previewData));
 		  
-		  // 如果用户已经上传过云存储文件
-			if (projectData.image && projectData.image.indexOf('cloud://') === 0) {
-				try {
-					// 先检查缓存中是否已有图片URL
-					if (this.imageCache[projectData.image]) {
-						projectData.image = this.imageCache[projectData.image];
-					} else {
-						const fileRes = await uniCloud.getTempFileURL({
-							fileList: [projectData.image]
-						});
-			
-						if (fileRes.fileList && fileRes.fileList.length > 0) {
-							// 更新缓存
-							this.imageCache[projectData.image] = fileRes.fileList[0].tempFileURL;
-							uni.setStorageSync('project_image_cache', this.imageCache);
-							projectData.image = fileRes.fileList[0].tempFileURL;
-						}
-					}
-				} catch (e) {
-					console.error('获取图片URL失败:', e);
-				}
-			}
+		  // 设置初始图片URL为空字符串
+		  this.processedImageUrl = '';
+		  
+		  // 处理图片路径
+		  await this.processImage();
+		  
 		  // 转换数字类型（防止模板报错）
 		  this.projectData.LeasingArea = Number(this.projectData.LeasingArea) || 0;
 		  this.projectData.OccupancyArea = Number(this.projectData.OccupancyArea) || 0;
 		},
+		
+		// 单独提取图片处理逻辑
+		async processImage() {
+		  // 如果没有图片，直接返回
+		  if (!this.projectData.image) {
+		    return;
+		  }
+		  
+		  // 如果用户已经上传过云存储文件
+		  if (this.projectData.image.indexOf('cloud://') === 0) {
+		    try {
+		      // 直接获取临时URL，不使用缓存
+		      const fileRes = await uniCloud.getTempFileURL({
+		        fileList: [this.projectData.image]
+		      });
+		
+		      if (fileRes.fileList && fileRes.fileList.length > 0) {
+		        this.processedImageUrl = fileRes.fileList[0].tempFileURL;
+		      }
+		    } catch (e) {
+		      console.error('获取图片URL失败:', e);
+		    }
+		  } else {
+		    // 非云存储路径，直接使用
+		    this.processedImageUrl = this.projectData.image;
+		  }
+		},
+		
 		// 计算空置面积：招租面积 - 入驻面积
 		getVacantArea() {
 			return this.projectData.LeasingArea - this.projectData.OccupancyArea;
@@ -154,7 +169,6 @@ export default {
 		},
 		handleImageError(e) {
 		console.warn('图片加载失败:', e);
-		this.projectData.image = '/static/default-project.jpg';
 		}
 	}
 }
