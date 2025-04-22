@@ -50,14 +50,14 @@
 			}
 		},
 		{
-			"path" : "pages/Admin/ManageProject",
+			"path" : "pages/Admin/Admin",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""
 			}
 		},
 		{
-			"path" : "pages/Admin/Admin",
+			"path" : "pages/Admin/PreviewProject",
 			"style" : 
 			{
 				"navigationBarTitleText" : ""

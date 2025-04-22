@@ -1,11 +1,11 @@
 {
   "bsonType": "object",
-  "required": [],
+  "required": ["name","street","address","accuratePosition","description","district","LeasingArea","OccupancyArea","image","investmentStatus","companies","rentalDetails"],
   "permission": {
     "read": "doc.status == 'published'",
-    "create": "role == 'admin'",
-    "update": "role == 'admin'",
-    "delete": "role == 'admin'"
+    "create": true,
+    "update": true,
+    "delete": true
   },
   "properties": {
     "_id": {
@@ -59,7 +59,7 @@
         "published",
         "archived"
       ],
-      "defaultValue": "draft"
+      "defaultValue": "published"
     },
     "LeasingArea": {
       "bsonType": "double",

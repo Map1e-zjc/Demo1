@@ -1,6 +1,6 @@
 {
   "bsonType": "object",
-  "required": ["account"],
+  "required": ["account","password"],
   "permission": {
     "read": "doc.isAdmin",
     "create": "doc.isAdmin",

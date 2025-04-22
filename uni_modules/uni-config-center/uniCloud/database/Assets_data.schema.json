@@ -3,9 +3,9 @@
 	"required": [],
 	"permission": {
 		"read": true,
-		"create": "role == 'admin'",
-		"update": "role == 'admin'",
-		"delete": "role == 'admin'"
+		"create": true,
+		"update": true,
+		"delete": true
 	},
 	"properties": {
 		"_id": {

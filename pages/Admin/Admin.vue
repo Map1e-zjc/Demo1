@@ -4,15 +4,7 @@
 			<view class="menu-item" @click="ToInsertPorject()">
 				<view class="menu-left">
 					<image src="/static/other_icons/edit.png" class="menu-icon"></image>
-					<text class="menu-text">进入后台新增项目</text>
-				</view>
-				<image src="/static/other_icons/arrow.png" class="arrow"></image>
-			</view>
-			
-			<view class="menu-item" @click="ToManagePorject()">
-				<view class="menu-left">
-					<image src="/static/other_icons/label.png" class="menu-icon"></image>
-					<text class="menu-text">管理项目表</text>
+					<text class="menu-text">新增项目</text>
 				</view>
 				<image src="/static/other_icons/arrow.png" class="arrow"></image>
 			</view>
@@ -33,7 +25,7 @@
 			<view class="menu-item"  @click="toFasttest()">
 				<view class="menu-left">
 					<image src="/static/other_icons/about.png" class="menu-icon"></image>
-					<text class="menu-text">进入测试函数页</text>
+					<text class="menu-text">测试函数页</text>
 				</view>
 				<image src="/static/other_icons/arrow.png" class="arrow"></image>
 			</view>

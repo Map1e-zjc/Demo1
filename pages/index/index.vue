@@ -125,7 +125,7 @@ export default {
               markersElement.longitude = project.accuratePosition.longitude;
             else console.error('数据库经度数据加载异常:', err);
             this.markers.push(markersElement)
-            console.log(markersElement)
+            //console.log(markersElement)
           }
         }
         else
