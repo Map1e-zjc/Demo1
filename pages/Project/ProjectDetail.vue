@@ -109,9 +109,12 @@ export default {
 			isLoading:true,
 		}
 	},
+	onShow()
+	{
+		this.checkLoginStatus();
+	},
 	onLoad(options) {
 		this.projectId = options.id;
-		this.checkLoginStatus();
 		
 		// 获取保存的图片缓存
 		const cachedImages = uni.getStorageSync('project_image_cache');

@@ -92,7 +92,7 @@ export default {
             query: {status: 'published'}
           }
         });
-        console.log(res.result)
+        //console.log(res.result)
         if(res.result && res.result.code === 200 && res.result.data && res.result.data)
         {
           const projectData = res.result.data.data;
