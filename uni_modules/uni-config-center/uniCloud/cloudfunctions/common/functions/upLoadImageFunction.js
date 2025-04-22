@@ -4,7 +4,7 @@ export default {
    * 图片上传功能
    * @returns {Promise<string>} 返回图片URL
    */
-  async uploadImage() {
+  async uploadImageFunction() {
     try {
       const res = await this._chooseImage();
       const fileContent = await this.fileToBase64(res.tempFiles[0].tempFilePath);

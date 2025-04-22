@@ -33,7 +33,7 @@ export default {
   },
   onShow() {
   	const user = uni.getStorageSync('User_data')
-  	console.log(user);
+  	//console.log(user);
   	if(user!='')
   	{
   		uni.showModal({

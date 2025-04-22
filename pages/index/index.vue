@@ -120,10 +120,10 @@ export default {
             const longitude =  project.accuratePosition.longitude;
             if(latitude && latitude != 0 && latitude >= -90 && latitude <= 90)
               markersElement.latitude = project.accuratePosition.latitude;
-            else console.error('数据库纬度数据加载异常:', err);
+            else console.error('数据库纬度数据加载异常:');
             if(longitude && longitude != 0 && longitude >= -180 && longitude <= 180)
               markersElement.longitude = project.accuratePosition.longitude;
-            else console.error('数据库经度数据加载异常:', err);
+            else console.error('数据库经度数据加载异常:');
             this.markers.push(markersElement)
             //console.log(markersElement)
           }

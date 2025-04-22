@@ -49,9 +49,6 @@
 		<button @click="goToFeedBack()" class="feedback-btn">
 			意见反馈
 		</button>
-		<button @click="goToAdminFast()" class="feedback-btn">
-			临时直通管理页面通道
-		</button>
 	</view>
 </template>
 
@@ -62,12 +59,6 @@
 			}
 		},
 		methods: {
-			goToAdminFast()
-			{
-				uni.navigateTo({
-					url: "/pages/Admin/Admin"
-				});
-			},
 			goToFeedBack() {
 				uni.navigateTo({
 					url: "/pages/AboutUs/FeedBack"

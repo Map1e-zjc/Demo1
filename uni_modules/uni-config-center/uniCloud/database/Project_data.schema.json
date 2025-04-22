@@ -99,13 +99,16 @@
         "properties": {
           "name": {
             "bsonType": "string",
-            "description": "企业名"
+            "description": "企业名",
+			 "maxLength": 50
           },
           "area": {
             "bsonType": "double",
-            "description": "入驻面积"
+            "description": "入驻面积",
+			"minimum": 0
           }
-        }
+        },
+		"required": ["name", "area"]
       }
     },
     "rentalDetails": {
@@ -128,13 +131,16 @@
           },
           "vacantArea": {
             "bsonType": "double",
-            "description": "空置面积(㎡)"
+            "description": "空置面积(㎡)",
+			"minimum": 0
           },
           "rent": {
             "bsonType": "double",
-            "description": "租金(元/㎡/月)"
+            "description": "租金(元/㎡/月)",
+			"minimum": 0
           }
-        }
+        },
+		 "required": ["building", "floor", "vacantArea", "rent"]
       }
     },
     "created_time": {

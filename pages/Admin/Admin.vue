@@ -1,5 +1,8 @@
 <template>
 	<view class="container">
+		<view class="title">
+			管理员页面
+		</view>
 		<view class="menu-list">
 			<view class="menu-item" @click="ToInsertPorject()">
 				<view class="menu-left">
@@ -11,14 +14,14 @@
 			<view class="menu-item" @click="exitManager()">
 				<view class="menu-left">
 					<image src="/static/other_icons/about.png" class="menu-icon"></image>
-					<text class="menu-text">退出管理员模式并删除登录记录</text>
+					<text class="menu-text">退出管理员页面并删除登录记录</text>
 				</view>
 				<image src="/static/other_icons/arrow.png" class="arrow"></image>
 			</view>
 			<view class="menu-item"  @click="exitAdmin()">
 				<view class="menu-left">
 					<image src="/static/other_icons/about.png" class="menu-icon"></image>
-					<text class="menu-text">退出管理员模式但保留登录记录</text>
+					<text class="menu-text">退出管理员页面但保留登录记录</text>
 				</view>
 				<image src="/static/other_icons/arrow.png" class="arrow"></image>
 			</view>
@@ -42,7 +45,7 @@ export default {
 	},
 	onShow() {
 		const user = uni.getStorageSync('User_data')
-		console.log(user + user!='');
+		//console.log(user + user!='');
 	},
 	methods: {
 		ToManagePorject()
@@ -68,6 +71,7 @@ export default {
 		    title: '退出成功，已恢复游客身份',
 		    icon: 'none'
 		  });
+		  uni.removeStorageSync('User_data');
 		  setTimeout(() => {
 			uni.switchTab({
 			url:"/pages/AboutUs/AboutUs"
@@ -95,6 +99,12 @@ export default {
 	background-color: #f5f5f5;
 }
 
+.title {
+	font-size: 36rpx;
+	font-weight: 600;
+	text-align: center;
+	padding: 30rpx 0;
+}
 
 .menu-list {
 	background-color: #fff;
