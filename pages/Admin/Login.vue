@@ -13,7 +13,7 @@
           placeholder-class="placeholder-style" />
       </view>
 
-      <button v-if="!isLogin" form-type="submit" class="login-btn" :disabled="!form.account || !form.password">
+      <button form-type="submit" class="login-btn" :disabled="!form.account || !form.password">
         管理员登录
       </button>
     </form>
@@ -25,17 +25,33 @@ export default {
 
   data() {
     return {
-      isLogin: false,
       form: {
         account: '',
         password: ''
       }
     }
   },
+  onShow() {
+  	const user = uni.getStorageSync('User_data')
+  	console.log(user);
+  	if(user!='')
+  	{
+  		uni.showModal({
+  		   title: '检测到登陆记录', // 标题
+  		   content: '直接进入管理员页面？', // 内容
+  		   success: function (res) {
+  		     if (res.confirm) {
+  		       uni.navigateTo({
+  		       	url:"/pages/Admin/Admin"
+  		       })
+  		     } else if (res.cancel) {
+  		       
+  		     }
+  		   }
+  		});
+  	}
+  },
   methods: {
-    onload() {
-
-    },
     async handleLogin() {
       try {
         const res = await uniCloud.callFunction({
@@ -62,7 +78,6 @@ export default {
 		  })
         }
       } catch (err) {
-        console.log(this.isLogin)
         console.log(err)
       }
     }

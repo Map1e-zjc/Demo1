@@ -37,7 +37,7 @@
 			
 			<view class="info-item">
 				<view class="icon-box">
-					<image src="/static/other_icons/address.png"  @click="check()" class="icon" mode="aspectFit"></image>
+					<image src="/static/other_icons/address.png"  class="icon" mode="aspectFit"></image>
 				</view>
 				<view class="info-content">
 					<view class="label">公司地址</view>
@@ -59,7 +59,6 @@
 	export default {
 		data() {
 			return {
-				toAdmin : false
 			}
 		},
 		methods: {
@@ -74,17 +73,10 @@
 					url: "/pages/AboutUs/FeedBack"
 				});
 			},
-			check(){
-				this.toAdmin = true;
-				console.log("this.toAdmin = true");
-			},
 			goToLogin() {
-				if(this.toAdmin)
-				{
-					uni.navigateTo({
-						url: "/pages/Admin/Login"
-					});
-				}
+				uni.navigateTo({
+					url: "/pages/Admin/Login"
+				});
 			},
 		}
 	}

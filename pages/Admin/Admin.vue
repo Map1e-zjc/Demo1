@@ -1,25 +1,42 @@
 <template>
 	<view class="container">
 		<view class="menu-list">
-			<navigator url="/pages/Admin/InsertProject">
-				<view class="menu-item">
-					<view class="menu-left">
-						<image src="/static/other_icons/edit.png" class="menu-icon"></image>
-						<text class="menu-text">进入后台新增项目</text>
-					</view>
-					<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			<view class="menu-item" @click="ToInsertPorject()">
+				<view class="menu-left">
+					<image src="/static/other_icons/edit.png" class="menu-icon"></image>
+					<text class="menu-text">进入后台新增项目</text>
 				</view>
-			</navigator>
+				<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			</view>
 			
-			<navigator url="/pages/Admin/ManageProject">
-				<view class="menu-item">
-					<view class="menu-left">
-						<image src="/static/other_icons/label.png" class="menu-icon"></image>
-						<text class="menu-text">管理项目表</text>
-					</view>
-					<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			<view class="menu-item" @click="ToManagePorject()">
+				<view class="menu-left">
+					<image src="/static/other_icons/label.png" class="menu-icon"></image>
+					<text class="menu-text">管理项目表</text>
 				</view>
-			</navigator>
+				<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			</view>
+			<view class="menu-item" @click="exitManager()">
+				<view class="menu-left">
+					<image src="/static/other_icons/about.png" class="menu-icon"></image>
+					<text class="menu-text">退出管理员模式并删除登录记录</text>
+				</view>
+				<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			</view>
+			<view class="menu-item"  @click="exitAdmin()">
+				<view class="menu-left">
+					<image src="/static/other_icons/about.png" class="menu-icon"></image>
+					<text class="menu-text">退出管理员模式但保留登录记录</text>
+				</view>
+				<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			</view>
+			<view class="menu-item"  @click="toFasttest()">
+				<view class="menu-left">
+					<image src="/static/other_icons/about.png" class="menu-icon"></image>
+					<text class="menu-text">进入测试函数页</text>
+				</view>
+				<image src="/static/other_icons/arrow.png" class="arrow"></image>
+			</view>
 		</view>
 	</view>
 </template>
@@ -32,14 +49,49 @@ export default {
 		}
 	},
 	onShow() {
-		
+		const user = uni.getStorageSync('User_data')
+		console.log(user + user!='');
 	},
 	methods: {
+		ToManagePorject()
+		{
+			uni.navigateTo({
+				url:"/pages/Admin/ManageProject"
+			})
+		},
+		ToInsertPorject()
+		{
+			uni.navigateTo({
+				url:"/pages/Admin/InsertProject"
+			})
+		},
+		toFasttest()
+		{
+			uni.navigateTo({
+				url:"/pages/Fasttest/Fasttest"
+			})
+		},
 		exitManager() {
 		  uni.showToast({
 		    title: '退出成功，已恢复游客身份',
 		    icon: 'none'
 		  });
+		  setTimeout(() => {
+			uni.switchTab({
+			url:"/pages/AboutUs/AboutUs"
+			})
+		  }, 1000);
+		},
+		exitAdmin() {
+		  uni.showToast({
+		    title: '退出成功，保留管理员权限',
+		    icon: 'none'
+		  });
+		  setTimeout(() => {
+			uni.switchTab({
+			url:"/pages/AboutUs/AboutUs"
+			})
+		  }, 1000);
 		},
 	},
 }
