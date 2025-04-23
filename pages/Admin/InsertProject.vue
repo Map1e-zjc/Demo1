@@ -29,20 +29,6 @@
 			</view>
 		  </view>
 		</view>
-        <view class="coord-group">
-          <input 
-            v-model="form.accuratePosition.longitude" 
-            type="number" 
-            placeholder="经度*" 
-            class="input-field half-width" 
-          />
-          <input 
-            v-model="form.accuratePosition.latitude" 
-            type="number" 
-            placeholder="纬度*" 
-            class="input-field half-width" 
-          />
-        </view>
         <textarea 
           v-model="form.description" 
           placeholder="项目描述*" 
@@ -145,6 +131,12 @@
           <text class="upload-text">{{ form.image ? '已上传' : '点击上传项目照片*' }}</text>
         </view>
       </view>
+	  <!-- 位置确定 -->
+	  <view class="form-section">
+	    <view class="upload-wrap" @click="uploadPosition()">
+	      <text class="upload-text">{{ form.image ? '已上传' : '点击跳转确认位置*' }}</text>
+	    </view>
+	  </view>
       <!-- 预览按钮 -->
 	  <button
 	    class="preview-btn" 
@@ -189,6 +181,22 @@ export default {
         rentalDetails: [{}],
       }
     }
+  },
+  onLoad()
+  {
+	  uni.removeStorageSync('Preview_data');
+	  uni.removeStorageSync('Temp_filename');
+	  uni.removeStorageSync('TempCenter_data');
+  },
+  onShow()
+  {
+	  const centerdata = uni.getStorageSync('TempCenter_data');
+	  if(centerdata != '')
+	  {
+	    this.form.accuratePosition.latitude = centerdata.latitude;
+	    this.form.accuratePosition.longitude = centerdata.longitude;
+	  }
+	  //console.log(this.form.accuratePosition)
   },
   computed: {
     isFormValid() {
@@ -249,6 +257,12 @@ export default {
        		uni.hideLoading({ noConflict: true });
        	  }
     },
+	uploadPosition()
+	{
+		uni.navigateTo({
+			url:"/pages/Admin/Locate"
+		})
+	},
 	ToPreview()
 	{
 		uni.setStorageSync('Preview_data',this.form);
@@ -279,7 +293,9 @@ export default {
             data: this.form
           }
         })
-		uni.removeStorageSync('Preview_data')
+		uni.removeStorageSync('Preview_data');
+		uni.removeStorageSync('Temp_filename');
+		uni.removeStorageSync('TempCenter_data');
         if (res.result.code === 200) {
           wx.showToast({ title: '提交成功', duration: 1500 })
           setTimeout(() => wx.navigateBack(), 1500)
@@ -371,11 +387,6 @@ export default {
   border-radius: 50%;
   background: #007aff;
   position: relative;
-}
-
-.coord-group {
-  display: flex;
-  gap: 20rpx;
 }
 
 .half-width {

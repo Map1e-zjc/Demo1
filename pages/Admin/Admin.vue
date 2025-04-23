@@ -44,7 +44,7 @@ export default {
 		}
 	},
 	onShow() {
-		const user = uni.getStorageSync('User_data')
+		//const user = uni.getStorageSync('User_data')
 		//console.log(user + user!='');
 	},
 	methods: {
