@@ -31,7 +31,7 @@ export default {
 
   // 私有方法：上传到云存储
   async _uploadToCloud(fileContent) {
-	const fileName = uni.getStorageSync('Temp_filename')
+	let fileName = uni.getStorageSync('Temp_filename')
 	if(fileName == '')
 	{
 		 fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;

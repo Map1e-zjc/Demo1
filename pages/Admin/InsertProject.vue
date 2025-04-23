@@ -134,7 +134,7 @@
 	  <!-- 位置确定 -->
 	  <view class="form-section">
 	    <view class="upload-wrap" @click="uploadPosition()">
-	      <text class="upload-text">{{ form.image ? '已上传' : '点击跳转确认位置*' }}</text>
+	      <text class="upload-text">{{ form.accuratePosition.latitude ? '已确定位置' : '点击跳转确认位置*' }}</text>
 	    </view>
 	  </view>
       <!-- 预览按钮 -->
@@ -185,7 +185,6 @@ export default {
   onLoad()
   {
 	  uni.removeStorageSync('Preview_data');
-	  uni.removeStorageSync('Temp_filename');
 	  uni.removeStorageSync('TempCenter_data');
   },
   onShow()
