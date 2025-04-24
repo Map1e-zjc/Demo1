@@ -104,7 +104,7 @@
 		<!-- 底部导航按钮 -->
 		<view class="nav-button-container">
 			<view class="button-row" v-if="isLogin">
-				<button class="nav-button edit-button" @click="handleEdit">修改项目</button>
+				<button class="nav-button edit-button" @click="handleEdit">编辑项目</button>
 			</view>
 			<button class="nav-button" @click="handleNavigation">一键导航</button>
 		</view>

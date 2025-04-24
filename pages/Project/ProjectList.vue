@@ -62,7 +62,11 @@
 						:fade-show="false"
 						:lazy-load="true"
 					></image>
-					<view class="status-tag">{{ item.investmentStatus }}</view>
+					<view class="status-tag" :class="{
+						'status-renting': item.investmentStatus === '招租中',
+						'status-rented': item.investmentStatus === '已出租',
+						'status-reserved': item.investmentStatus === '预保留'
+					}">{{ item.investmentStatus }}</view>
 				</view>
 				
 				<!-- 项目信息 -->
@@ -157,11 +161,30 @@
 		onShow() {
 			// 每次页面显示时检查登录状态
 			this.checkLoginStatus();
+			
 			// 如果数据为空才重新加载
 			if (this.projects.length === 0) {
 				this.isLoading = true;
 				this.loadProjects();
 			}
+		},
+		onLoad() {
+			// 加载已保存的图片缓存
+			const cachedImages = uni.getStorageSync('project_image_cache');
+			if (cachedImages) {
+				this.imageCache = cachedImages;
+			}
+			
+			// 监听项目更新事件
+			uni.$on('projectUpdated', () => {
+				console.log('接收到项目更新事件');
+				this.isLoading = true;
+				this.loadProjects();
+			});
+		},
+		onUnload() {
+			// 页面卸载时移除事件监听，防止内存泄漏
+			uni.$off('projectUpdated');
 		},
 		methods: {
 			// 计算空置面积：招租面积 - 入驻面积
@@ -343,13 +366,6 @@
 					});
 				}
 			}
-		},
-		onLoad() {
-			// 加载已保存的图片缓存
-			const cachedImages = uni.getStorageSync('project_image_cache');
-			if (cachedImages) {
-				this.imageCache = cachedImages;
-			}
 		}
 	}
 </script>
@@ -480,11 +496,23 @@
 	position: absolute;
 	top: 20rpx;
 	right: 20rpx;
-	background-color: #FF6B6B;
 	color: #fff;
 	font-size: 24rpx;
 	padding: 6rpx 16rpx;
 	border-radius: 6rpx;
+	background-color: #FF6B6B; /* 默认红色 */
+}
+
+.status-renting {
+	background-color: #FF6B6B; /* 招租中保持红色 */
+}
+
+.status-rented {
+	background-color: #4CAF50; /* 已出租显示绿色 */
+}
+
+.status-reserved {
+	background-color: #FFA500; /* 预保留显示橙色 */
 }
 
 .project-info {

@@ -362,6 +362,9 @@ export default {
 						duration: 1500 
 					});
 					
+					// 发送自定义事件通知列表页刷新
+					uni.$emit('projectUpdated');
+					
 					setTimeout(() => uni.navigateBack(), 1500);
 				} else {
 					throw new Error(res.result?.message || '更新失败');
