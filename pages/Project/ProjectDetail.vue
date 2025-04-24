@@ -1,11 +1,6 @@
 <template>
 	<view class="detail-container">
-		<LoadingComponent
-		  :isLoading="isLoading" 
-		  text="项目内容加载中"
-		  color="#2979FF"
-		  :size="40"
-		/>
+		<LoadingComponent :isLoading="isLoading" text="项目内容加载中" color="#2979FF" :size="40" />
 		<!-- 项目基本信息 -->
 		<view class="project-header">
 			<image class="project-image" :src="projectData.image" mode="aspectFill" :fade-show="false"></image>
@@ -32,7 +27,18 @@
 		<!-- 项目介绍 -->
 		<view class="info-card">
 			<view class="card-title">项目介绍</view>
-			<view class="project-desc">{{ projectData.description }}</view>
+			<view class="project-desc" :class="{'desc-expanded': isDescExpanded}">
+				<template v-if="!isDescExpanded && projectData.description && projectData.description.length > 100">
+					{{ projectData.description.substring(0, 100) + '...' }}
+				</template>
+				<template v-else>
+					{{ projectData.description }}
+				</template>
+			</view>
+			<view v-if="projectData.description && projectData.description.length > 100" class="desc-toggle" @click="toggleDescExpand">
+				{{ isDescExpanded ? '收起' : '展开全部' }}
+				<text class="toggle-icon">{{ isDescExpanded ? '↑' : '↓' }}</text>
+			</view>
 		</view>
 
 		<!-- 详细信息（仅登录用户可见） -->
@@ -53,9 +59,10 @@
 		</view>
 
 		<!-- 招租详情（仅登录用户可见）- 整合了租金和入驻企业信息 -->
-		<view class="info-card" v-if="isLogin && (projectData.rentalDetails && projectData.rentalDetails.length > 0 || projectData.companies && projectData.companies.length > 0)">
+		<view class="info-card"
+			v-if="isLogin && (projectData.rentalDetails && projectData.rentalDetails.length > 0 || projectData.companies && projectData.companies.length > 0)">
 			<view class="card-title">招租详情</view>
-			
+
 			<!-- 招租信息表格 -->
 			<view class="section-title" v-if="projectData.rentalDetails && projectData.rentalDetails.length > 0">招租信息</view>
 			<view class="rental-table" v-if="projectData.rentalDetails && projectData.rentalDetails.length > 0">
@@ -69,11 +76,12 @@
 					<text class="column building">{{ price.building || '-' }}</text>
 					<text class="column floor">{{ price.floor }}</text>
 					<text class="column area">{{ price.vacantArea }}㎡</text>
-					<text class="column price highlight">{{ price.rent === '面议' ? '面议' : (isNaN(parseFloat(price.rent)) ? price.rent : parseFloat(price.rent) + '元/㎡/月') }}</text>
+					<text class="column price highlight">{{ price.rent === '面议' ? '面议' : (isNaN(parseFloat(price.rent)) ?
+						price.rent : parseFloat(price.rent) + '元/㎡/月') }}</text>
 				</view>
 			</view>
 			<view class="no-data" v-if="!projectData.rentalDetails || projectData.rentalDetails.length === 0">暂无招租信息</view>
-			
+
 			<!-- 入驻企业信息列表 -->
 			<view class="section-divider"></view>
 			<view class="section-title" v-if="projectData.companies && projectData.companies.length > 0">入驻企业</view>
@@ -89,9 +97,15 @@
 			</view>
 			<view class="no-data" v-if="!projectData.companies || projectData.companies.length === 0">暂无入驻企业</view>
 		</view>
+		
+		<!-- 底部空白区域，用于增加间距 -->
+		<view class="bottom-spacing"></view>
 
 		<!-- 底部导航按钮 -->
 		<view class="nav-button-container">
+			<view class="button-row" v-if="isLogin">
+				<button class="nav-button edit-button" @click="handleEdit">修改项目</button>
+			</view>
 			<button class="nav-button" @click="handleNavigation">一键导航</button>
 		</view>
 	</view>
@@ -105,23 +119,28 @@ export default {
 			isLogin: false,
 			projectId: '',
 			projectData: {}, // 初始为空对象
-			imageCache: {} ,// 图片缓存
-			isLoading:true,
+			imageCache: {},// 图片缓存
+			isLoading: true,
+			isDescExpanded: false,
 		}
 	},
-	onShow()
-	{
+	onShow() {
 		this.checkLoginStatus();
+		// 从编辑页面返回时，直接重新加载数据
+		if (this.projectId) {
+			this.isLoading = true;
+			this.loadProjectDetail();
+		}
 	},
 	onLoad(options) {
 		this.projectId = options.id;
-		
+
 		// 获取保存的图片缓存
 		const cachedImages = uni.getStorageSync('project_image_cache');
 		if (cachedImages) {
 			this.imageCache = cachedImages;
 		}
-		
+
 		this.loadProjectDetail();
 	},
 	methods: {
@@ -230,18 +249,28 @@ export default {
 		handleNavigation() {
 			uni.showModal({
 				title: '',
-				  content: '进入地图页面?',
-				  success: (res) => {
-				    if (res.confirm) {
-					 uni.setStorageSync('Center_data',this.centerdata)
-				     uni.switchTab({
-				     	url: '/pages/Index/Index'
-				     });
-				    } else if (res.cancel) {
-				      return;
-				    }
-				  }
+				content: '进入地图页面?',
+				success: (res) => {
+					if (res.confirm) {
+						uni.setStorageSync('Center_data', this.centerdata)
+						uni.switchTab({
+							url: '/pages/Index/Index'
+						});
+					} else if (res.cancel) {
+						return;
+					}
+				}
 			})
+		},
+		handleEdit() {
+			// 将项目数据存储到本地，以便编辑页面使用
+			uni.setStorageSync('EditProject_data', this.projectData);
+			uni.navigateTo({
+				url: `/pages/Project/ManageProject?id=${this.projectId}`
+			});
+		},
+		toggleDescExpand() {
+			this.isDescExpanded = !this.isDescExpanded;
 		}
 	}
 }
@@ -249,7 +278,7 @@ export default {
 
 <style>
 .detail-container {
-	padding-bottom: 140rpx;
+	padding-bottom: 180rpx;  /* 增加底部内边距 */
 	background-color: #f5f5f5;
 }
 
@@ -325,6 +354,8 @@ export default {
 	font-size: 28rpx;
 	color: #666;
 	line-height: 1.6;
+	max-height: 200rpx;
+	overflow: hidden;
 }
 
 .company-list {
@@ -375,7 +406,8 @@ export default {
 	margin-bottom: 20rpx;
 }
 
-.rental-header, .rental-item {
+.rental-header,
+.rental-item {
 	display: flex;
 	width: 100%;
 	border-bottom: 1rpx solid #eee;
@@ -420,7 +452,8 @@ export default {
 	margin-bottom: 20rpx;
 }
 
-.company-header, .company-row {
+.company-header,
+.company-row {
 	display: flex;
 	width: 100%;
 	border-bottom: 1rpx solid #eee;
@@ -467,6 +500,10 @@ export default {
 	font-size: 28rpx;
 }
 
+.bottom-spacing {
+	height: 50rpx;  /* 添加额外的底部间距元素 */
+}
+
 .nav-button-container {
 	position: fixed;
 	bottom: 0;
@@ -475,6 +512,11 @@ export default {
 	padding: 20rpx;
 	background-color: #fff;
 	box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
+	z-index: 100;  /* 确保按钮在最上层 */
+}
+
+.button-row {
+	margin-bottom: 20rpx;
 }
 
 .nav-button {
@@ -488,7 +530,36 @@ export default {
 	border: none;
 }
 
+.edit-button {
+	background-color: #FF9500;
+}
+
 .nav-button:active {
 	background-color: #2567e3;
+}
+
+.edit-button:active {
+	background-color: #e58500;
+}
+
+.desc-expanded {
+	max-height: none !important;
+	overflow: visible;
+}
+
+.desc-toggle {
+	color: #2979FF;
+	font-size: 28rpx;
+	margin-top: 10rpx;
+	padding: 10rpx 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-top: 1rpx dashed #eee;
+}
+
+.toggle-icon {
+	margin-left: 10rpx;
+	font-weight: bold;
 }
 </style>

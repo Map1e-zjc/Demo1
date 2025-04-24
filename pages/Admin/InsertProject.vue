@@ -5,8 +5,11 @@
     <view class="form-content">
       <!-- 基础信息 -->
       <view class="form-section">
+        <text class="input-label">项目名称</text>
         <input v-model="form.name" placeholder="项目名称*" class="input-field" />
+        <text class="input-label">街道名称</text>
         <input v-model="form.street" placeholder="街道名称*" class="input-field" />
+        <text class="input-label">详细地址</text>
         <input v-model="form.address" placeholder="详细地址*" class="input-field" />
 		<view class="district-group">
 		  <text class="district-label">所属城区*</text>
@@ -29,22 +32,29 @@
 			</view>
 		  </view>
 		</view>
-        <textarea 
-          v-model="form.description" 
-          placeholder="项目描述*" 
-          class="input-field textarea" 
-          auto-height
-        />
+        <text class="input-label">项目描述</text>
+        <view class="textarea-container">
+          <textarea 
+            v-model="form.description" 
+            placeholder="项目描述*" 
+            class="textarea" 
+            auto-height
+            maxlength="-1"
+            show-confirm-bar="false"
+          />
+        </view>
       </view>
 
       <!-- 面积信息 -->
       <view class="form-section">
+        <text class="input-label">招租面积(㎡)</text>
         <input 
           v-model="form.LeasingArea" 
           type="number" 
           placeholder="招租面积(㎡)*" 
           class="input-field" 
         />
+        <text class="input-label">入驻面积(㎡)</text>
         <input 
           v-model="form.OccupancyArea" 
           type="number" 
@@ -64,11 +74,13 @@
 				 style="font-size: 24px; color: #ff4d4f;"
 			   >×</text>
           </view>
+          <text class="input-label">企业名称</text>
           <input 
             v-model="company.name" 
             placeholder="企业名称*" 
             class="input-field"
           />
+          <text class="input-label">入驻面积(㎡)</text>
           <input 
             v-model="company.area" 
             type="number" 
@@ -93,22 +105,26 @@
 	                style="font-size: 24px; color: #ff4d4f;"
 	              >×</text>
 	            </view>
+                <text class="input-label">楼栋</text>
 	            <input 
 	              v-model="detail.building" 
 	              placeholder="楼栋*" 
 	              class="input-field"
 	            />
+                <text class="input-label">楼层</text>
 	            <input 
 	              v-model="detail.floor" 
 	              placeholder="楼层*" 
 	              class="input-field"
 	            />
+                <text class="input-label">空置面积(㎡)</text>
 	            <input 
 	              v-model="detail.vacantArea" 
 	              type="number" 
 	              placeholder="空置面积(㎡)*" 
 	              class="input-field"
 	            />
+                <text class="input-label">租金(元/㎡/月)</text>
 	            <input 
 	              v-model="detail.rent" 
 	              placeholder="租金(元/㎡/月)* 填写数字或'面议'" 
@@ -122,12 +138,14 @@
 	        </view>
       <!-- 图片上传 -->
       <view class="form-section">
+        <text class="input-label">项目照片</text>
         <view class="upload-wrap" @click="uploadImage()">
           <text class="upload-text">{{ form.image ? '已上传' : '点击上传项目照片*' }}</text>
         </view>
       </view>
 	  <!-- 位置确定 -->
 	  <view class="form-section">
+        <text class="input-label">项目位置</text>
 	    <view class="upload-wrap" @click="uploadPosition()">
 	      <text class="upload-text">{{ form.accuratePosition.latitude ? '已确定位置' : '点击跳转确认位置*' }}</text>
 	    </view>
@@ -387,10 +405,24 @@ export default {
   flex: 1;
 }
 
+.textarea-container {
+	position: relative;
+	border: 2rpx solid #e0e3e6;
+	border-radius: 12rpx;
+	margin-bottom: 32rpx;
+	min-height: 200rpx;
+	max-height: 400rpx;
+	overflow-y: auto;
+}
+
 .textarea {
-  height: 200rpx;
-  padding: 24rpx;
-  line-height: 1.6;
+	width: 100%;
+	min-height: 200rpx;
+	padding: 24rpx;
+	line-height: 1.6;
+	box-sizing: border-box;
+	border: none;
+	font-size: 28rpx;
 }
 
 .section-title {
@@ -456,5 +488,13 @@ export default {
 .submit-btn[disabled] {
   background: #c0c4cc;
   opacity: 0.7;
+}
+
+.input-label {
+	display: block;
+	font-size: 28rpx;
+	color: #333;
+	margin-bottom: 12rpx;
+	font-weight: 500;
 }
 </style>
