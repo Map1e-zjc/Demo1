@@ -69,7 +69,7 @@
 					<text class="column building">{{ price.building || '-' }}</text>
 					<text class="column floor">{{ price.floor }}</text>
 					<text class="column area">{{ price.vacantArea }}㎡</text>
-					<text class="column price highlight">{{ price.rent }}元/㎡/月</text>
+					<text class="column price highlight">{{ price.rent === '面议' ? '面议' : (isNaN(parseFloat(price.rent)) ? price.rent : parseFloat(price.rent) + '元/㎡/月') }}</text>
 				</view>
 			</view>
 			<view class="no-data" v-if="!projectData.rentalDetails || projectData.rentalDetails.length === 0">暂无招租信息</view>
@@ -168,7 +168,7 @@ export default {
 					// 处理价格数据
 					if (projectData.rentalDetails && projectData.rentalDetails.length) {
 						projectData.rentalDetails.forEach(price => {
-							price.rent = Number(price.rent) || 0;
+							// 租金已变为字符串类型，不需要转换，只处理空置面积
 							if (price.vacantArea) {
 								price.vacantArea = Number(price.vacantArea) || 0;
 							}

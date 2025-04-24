@@ -94,7 +94,7 @@
 						</view>
 						<view class="rent-info">
 							<text class="info-label">租金范围：</text>
-							<text class="info-value">{{ getRentRange(item) }}元/㎡/月</text>
+							<text class="info-value">{{ getRentRange(item) }}</text>
 						</view>
 					</view>
 				</view>
@@ -178,16 +178,24 @@
 			// 获取租金范围
 			getRentRange(item) {
 				if (!item.rentalDetails || item.rentalDetails.length === 0) return '暂无';
-				let minRent = Infinity;
-				let maxRent = 0;
 				
-				item.rentalDetails.forEach(price => {
-					if (price.rent < minRent) minRent = price.rent;
-					if (price.rent > maxRent) maxRent = price.rent;
-				});
+				// 检查是否有"面议"的租金
+				const hasNegotiableRent = item.rentalDetails.some(price => price.rent === '面议');
+				if (hasNegotiableRent) return '面议';
 				
-				if (minRent === maxRent) return minRent;
-				return `${minRent}-${maxRent}`;
+				// 尝试获取数字范围
+				let validRents = item.rentalDetails
+					.map(price => price.rent)
+					.filter(rent => !isNaN(parseFloat(rent)))
+					.map(rent => parseFloat(rent));
+				
+				if (validRents.length === 0) return '暂无';
+				
+				let minRent = Math.min(...validRents);
+				let maxRent = Math.max(...validRents);
+				
+				if (minRent === maxRent) return minRent + '元/㎡/月';
+				return `${minRent}-${maxRent}元/㎡/月`;
 			},
 			checkLoginStatus() {
 				const userData = uni.getStorageSync('User_data');
@@ -274,7 +282,7 @@
 							// 处理招租详情数据
 							if (project.rentalDetails && project.rentalDetails.length) {
 								project.rentalDetails.forEach(price => {
-									price.rent = Number(price.rent) || 0;
+									// 租金保持原始字符串格式，只处理空置面积
 									if (price.vacantArea) {
 										price.vacantArea = Number(price.vacantArea) || 0;
 									}

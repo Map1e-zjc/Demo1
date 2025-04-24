@@ -9,7 +9,7 @@
 				<view class="icon-box">
 					<image src="/static/other_icons/call.png" class="icon" mode="aspectFit"></image>
 				</view>
-				<view class="info-content">
+				<view class="info-content" @click="makePhoneCall('0577-58699829')">
 					<view class="label">招商热线</view>
 					<view class="value">0577-58699829</view>
 				</view>
@@ -22,26 +22,6 @@
 				<view class="info-content">
 					<view class="label">联系人</view>
 					<view class="value">潘女士</view>
-				</view>
-			</view>
-			
-			<view class="info-item">
-				<view class="icon-box">
-					<image src="/static/other_icons/email.png" class="icon" mode="aspectFit"></image>
-				</view>
-				<view class="info-content">
-					<view class="label">电子邮箱</view>
-					<view class="value">zhaoshang@ouyu.com</view>
-				</view>
-			</view>
-			
-			<view class="info-item">
-				<view class="icon-box">
-					<image src="/static/other_icons/address.png"  class="icon" mode="aspectFit"></image>
-				</view>
-				<view class="info-content">
-					<view class="label">公司地址</view>
-					<view class="value">温州市瓯城区车站大道100号</view>
 				</view>
 			</view>
 		</view>
@@ -67,6 +47,11 @@
 			goToLogin() {
 				uni.navigateTo({
 					url: "/pages/Admin/Login"
+				});
+			},
+			makePhoneCall(phoneNumber) {
+				uni.makePhoneCall({
+					phoneNumber: phoneNumber
 				});
 			},
 		}
@@ -115,6 +100,24 @@
 
 .info-content {
 	flex: 1;
+}
+
+.info-item:first-child .info-content {
+	position: relative;
+}
+
+.info-item:first-child .info-content::after {
+	content: '';
+	position: absolute;
+	right: 20rpx;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 36rpx;
+	height: 36rpx;
+	background-image: url('data:image/svg+xml;utf8,<svg t="1624531888945" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4688" width="36" height="36"><path d="M320 512l384-384 64 64L448 512l320 320-64 64-384-384z" p-id="4688" fill="%23007AFF"></path></svg>');
+	background-repeat: no-repeat;
+	background-size: cover;
+	transform: translateY(-50%) rotate(180deg);
 }
 
 .label {

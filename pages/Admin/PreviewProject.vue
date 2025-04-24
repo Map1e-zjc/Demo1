@@ -69,7 +69,7 @@
 					<text class="column building">{{ price.building || '-' }}</text>
 					<text class="column floor">{{ price.floor }}</text>
 					<text class="column area">{{ price.vacantArea }}㎡</text>
-					<text class="column price highlight">{{ price.rent }}元/㎡/月</text>
+					<text class="column price highlight">{{ price.rent === '面议' ? '面议' : (isNaN(parseFloat(price.rent)) ? price.rent : parseFloat(price.rent) + '元/㎡/月') }}</text>
 				</view>
 			</view>
 			<view class="no-data" v-if="!projectData.rentalDetails || projectData.rentalDetails.length === 0">暂无招租信息</view>

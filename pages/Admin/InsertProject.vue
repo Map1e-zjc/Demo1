@@ -111,8 +111,7 @@
 	            />
 	            <input 
 	              v-model="detail.rent" 
-	              type="number" 
-	              placeholder="租金(元/㎡/月)*" 
+	              placeholder="租金(元/㎡/月)* 填写数字或'面议'" 
 	              class="input-field"
 	            />
 	          </view>
@@ -213,7 +212,7 @@ export default {
 	        
 	  const rentalValid = this.form.rentalDetails.every(d => 
 		d.building?.trim() && d.floor?.trim() && 
-		!isNaN(d.vacantArea) && !isNaN(d.rent)
+		!isNaN(d.vacantArea) && (d.rent === '面议' || !isNaN(d.rent))
 	  );
 	  
 	        return baseValid && companiesValid && rentalValid;
@@ -279,7 +278,7 @@ export default {
 			  building: d.building.trim(),
 			  floor: d.floor.trim(),
 			  vacantArea: parseFloat(d.vacantArea),
-			  rent: parseFloat(d.rent)
+			  rent: d.rent.trim()
 			}));
         const res = await uniCloud.callFunction({
           name: 'db-add',
