@@ -58,13 +58,11 @@
         <view class="repeat-group" v-for="(company, index) in form.companies" :key="index">
           <view class="repeat-header">
             <text>企业 {{ index + 1 }}</text>
-            <uni-icons 
-              type="close" 
-              size="24rpx" 
-              color="#ff4d4f" 
-              @click="removeCompany(index)"
-              v-if="form.companies.length > 1"
-            />
+			   <text 
+				 v-if="form.companies.length > 1"
+				 @click="removeCompany(index)"
+				 style="font-size: 24px; color: #ff4d4f;"
+			   >×</text>
           </view>
           <input 
             v-model="company.name" 
@@ -89,13 +87,11 @@
 	          <view class="repeat-group" v-for="(detail, index) in form.rentalDetails" :key="index">
 	            <view class="repeat-header">
 	              <text>招租 {{ index + 1 }}</text>
-	              <uni-icons 
-	                type="close" 
-	                size="24rpx" 
-	                color="#ff4d4f" 
+	              <text 
+	                v-if="form.companies.length > 1"
 	                @click="removeRental(index)"
-	                v-if="form.rentalDetails.length > 1"
-	              />
+	                style="font-size: 24px; color: #ff4d4f;"
+	              >×</text>
 	            </view>
 	            <input 
 	              v-model="detail.building" 
