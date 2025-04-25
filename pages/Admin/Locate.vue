@@ -39,12 +39,28 @@ export default {
       {
         this.latitude = centerdata.latitude;
         this.longitude = centerdata.longitude;
+        
+        // 如果有之前保存的位置，显示标记点
+        this.markers = [{
+          id: 1,
+          latitude: centerdata.latitude,
+          longitude: centerdata.longitude,
+          width: 20,
+          height: 30
+        }];
       }
     },
 	confirmPosition()
 	{
-		uni.setStorageSync('TempCenter_data',this.markers[0]);
-		uni.navigateBack();
+		if (this.markers.length > 0) {
+			uni.setStorageSync('TempCenter_data', this.markers[0]);
+			uni.navigateBack();
+		} else {
+			uni.showToast({
+				title: '请先选择位置',
+				icon: 'none'
+			});
+		}
 	},
     // 标记点点击事件
     handleMapTap(e) {
@@ -53,6 +69,8 @@ export default {
 		id:1,
 		latitude:e.detail.latitude,
 		longitude:e.detail.longitude,
+        width: 20,  // 添加标记点宽度
+        height: 30  // 添加标记点高度
 	  }]
 	  this.markers= markers;
     },
