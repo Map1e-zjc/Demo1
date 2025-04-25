@@ -65,12 +65,25 @@ export default {
   onLoad()
   {
     this.fetchData()
+    // 添加监听器，监听项目更新事件
+    uni.$on('projectUpdated', this.refreshMarkers)
+  },
+  onUnload() {
+    // 移除事件监听，防止内存泄漏
+    uni.$off('projectUpdated', this.refreshMarkers)
   },
   onShow()
   {
      this.fetchCenter()
   },
   methods: {
+    // 添加刷新地图标记点的方法
+    refreshMarkers() {
+      // 清空现有标记点
+      this.markers = []
+      // 重新获取标记点数据
+      this.fetchData()
+    },
     fetchCenter()
     {
       const centerdata = uni.getStorageSync('Center_data');
