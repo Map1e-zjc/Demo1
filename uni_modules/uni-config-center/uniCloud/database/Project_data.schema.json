@@ -70,18 +70,6 @@
       ],
       "defaultValue": "published"
     },
-    "LeasingArea": {
-      "bsonType": "double",
-      "minimum": 0,
-      "maximum": 10000,
-      "title": "招租面积(㎡)"
-    },
-    "OccupancyArea": {
-      "bsonType": "double",
-      "minimum": 0,
-      "maximum": 10000,
-      "title": "入驻面积(㎡)"
-    },
     "image": {
       "bsonType": "string",
       "title": "项目照片"
