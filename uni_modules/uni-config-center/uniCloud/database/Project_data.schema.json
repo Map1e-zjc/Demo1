@@ -1,6 +1,19 @@
 {
   "bsonType": "object",
-  "required": ["name","street","address","accuratePosition","description","district","LeasingArea","OccupancyArea","image","investmentStatus","companies","rentalDetails"],
+  "required": [
+    "name",
+    "street",
+    "address",
+    "accuratePosition",
+    "description",
+    "district",
+    "LeasingArea",
+    "OccupancyArea",
+    "image",
+    "investmentStatus",
+    "companies",
+    "rentalDetails"
+  ],
   "permission": {
     "read": "doc.status == 'published'",
     "create": true,
@@ -25,23 +38,20 @@
       "bsonType": "string",
       "description": "详细地址"
     },
-	"accuratePosition":{
-		"bsonType": "object",
-		"description": "精确位置",
-		"properties":
-		{
-			"longitude":
-			{
-				"bsonType": "double",
-				"description": "经度"
-			},
-			"latitude":
-			{
-				"bsonType": "double",
-				"description": "纬度"
-			}
-		}
-	},
+    "accuratePosition": {
+      "bsonType": "object",
+      "description": "精确位置",
+      "properties": {
+        "longitude": {
+          "bsonType": "double",
+          "description": "经度"
+        },
+        "latitude": {
+          "bsonType": "double",
+          "description": "纬度"
+        }
+      }
+    },
     "description": {
       "bsonType": "string",
       "description": "项目描述"
@@ -50,7 +60,6 @@
       "bsonType": "string",
       "description": "城区名"
     },
-    
     "status": {
       "bsonType": "string",
       "title": "发布状态",
@@ -100,15 +109,23 @@
           "name": {
             "bsonType": "string",
             "description": "企业名",
-			 "maxLength": 50
+            "maxLength": 50
           },
           "area": {
             "bsonType": "double",
             "description": "入驻面积",
-			"minimum": 0
+            "minimum": 0
+          },
+          "position": {
+            "bsonType": "string",
+            "description": "入驻位置"
           }
         },
-		"required": ["name", "area"]
+        "required": [
+          "name",
+          "area",
+          "position"
+        ]
       }
     },
     "rentalDetails": {
@@ -132,14 +149,19 @@
           "vacantArea": {
             "bsonType": "double",
             "description": "空置面积(㎡)",
-			"minimum": 0
+            "minimum": 0
           },
           "rent": {
             "bsonType": "string",
             "description": "租金(元/㎡/月或面议)"
           }
         },
-		 "required": ["building", "floor", "vacantArea", "rent"]
+        "required": [
+          "building",
+          "floor",
+          "vacantArea",
+          "rent"
+        ]
       }
     },
     "created_time": {

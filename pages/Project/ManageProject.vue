@@ -7,10 +7,6 @@
 			<view class="form-section">
 				<text class="input-label">项目名称</text>
 				<input v-model="form.name" placeholder="项目名称*" class="input-field" />
-				<text class="input-label">街道名称</text>
-				<input v-model="form.street" placeholder="街道名称*" class="input-field" />
-				<text class="input-label">详细地址</text>
-				<input v-model="form.address" placeholder="详细地址*" class="input-field" />
 				<view class="district-group">
 					<text class="district-label">所属城区*</text>
 					<view class="radio-group">
@@ -24,6 +20,11 @@
 						</view>
 					</view>
 				</view>
+				<text class="input-label">街道名称</text>
+				<input v-model="form.street" placeholder="街道名称*" class="input-field" />
+				<text class="input-label">详细地址</text>
+				<input v-model="form.address" placeholder="详细地址*" class="input-field" />
+				
 				<text class="input-label">项目描述</text>
 				<view class="textarea-container">
 					<textarea 
@@ -35,14 +36,6 @@
 						show-confirm-bar="false"
 					/>
 				</view>
-			</view>
-
-			<!-- 面积信息 -->
-			<view class="form-section">
-				<text class="input-label">招租面积(㎡)</text>
-				<input v-model="form.LeasingArea" type="number" placeholder="招租面积(㎡)*" class="input-field" />
-				<text class="input-label">入驻面积(㎡)</text>
-				<input v-model="form.OccupancyArea" type="number" placeholder="入驻面积(㎡)*" class="input-field" />
 			</view>
 
 			<!-- 招商状态 -->
@@ -80,6 +73,8 @@
 					<input v-model="company.name" placeholder="企业名称*" class="input-field" />
 					<text class="input-label">入驻面积(㎡)</text>
 					<input v-model="company.area" type="number" placeholder="入驻面积(㎡)*" class="input-field" />
+					<text class="input-label">入驻位置</text>
+					<input v-model="company.position" placeholder="入驻位置*" class="input-field" />
 				</view>
 				<button class="add-btn" @click="addCompany">
 					<uni-icons type="plus" size="28rpx" />

@@ -25,7 +25,7 @@
 			</view>
 			<view class="info-item">
 				<text class="label">招租面积：</text>
-				<text class="value">{{ projectData.LeasingArea }}㎡</text>
+				<text class="value">{{ getVacantArea() }}㎡</text>
 			</view>
 		</view>
 
@@ -40,7 +40,7 @@
 			<view class="card-title">详细信息</view>
 			<view class="info-item">
 				<text class="label">入驻面积：</text>
-				<text class="value">{{ projectData.OccupancyArea }}㎡</text>
+				<text class="value">{{ getOccupiedArea() }}㎡</text>
 			</view>
 			<view class="info-item">
 				<text class="label">可租面积：</text>
@@ -126,7 +126,24 @@ export default {
 		  
 		  // 转换数字类型（防止模板报错）
 		  this.projectData.LeasingArea = Number(this.projectData.LeasingArea) || 0;
+		  // 注意：OccupancyArea 字段保留，但页面显示使用动态计算的入驻面积
 		  this.projectData.OccupancyArea = Number(this.projectData.OccupancyArea) || 0;
+		  
+		  // 处理企业数据 - 用于计算实际入驻面积
+		  if (this.projectData.companies && this.projectData.companies.length) {
+		    this.projectData.companies.forEach(company => {
+		      company.area = Number(company.area) || 0;
+		    });
+		  }
+		  
+		  // 处理招租详情数据 - 用于计算实际可租面积
+		  if (this.projectData.rentalDetails && this.projectData.rentalDetails.length) {
+		    this.projectData.rentalDetails.forEach(rental => {
+		      if (rental.vacantArea) {
+		        rental.vacantArea = Number(rental.vacantArea) || 0;
+		      }
+		    });
+		  }
 		},
 		
 		// 单独提取图片处理逻辑
@@ -156,15 +173,32 @@ export default {
 		  }
 		},
 		
-		// 计算空置面积：招租面积 - 入驻面积
-		getVacantArea() {
-			return this.projectData.LeasingArea - this.projectData.OccupancyArea;
+		// 计算入驻面积：所有入驻企业面积的总和
+		getOccupiedArea() {
+			if (!this.projectData.companies || this.projectData.companies.length === 0) {
+				return 0;
+			}
+			return this.projectData.companies.reduce((total, company) => {
+				return total + (Number(company.area) || 0);
+			}, 0);
 		},
-		// 计算空置率：空置面积 / 招租面积 * 100
+		// 计算可租面积：所有招租详情中空置面积的总和
+		getVacantArea() {
+			if (!this.projectData.rentalDetails || this.projectData.rentalDetails.length === 0) {
+				return 0;
+			}
+			return this.projectData.rentalDetails.reduce((total, rental) => {
+				return total + (Number(rental.vacantArea) || 0);
+			}, 0);
+		},
+		// 计算空置率：可租面积 / (入驻面积 + 可租面积) * 100
 		getVacancyRate() {
-			if (!this.projectData.LeasingArea || this.projectData.LeasingArea === 0) return 0;
+			const occupiedArea = this.getOccupiedArea();
 			const vacantArea = this.getVacantArea();
-			const rate = (vacantArea / this.projectData.LeasingArea * 100).toFixed(1);
+			const totalArea = occupiedArea + vacantArea;
+			
+			if (totalArea === 0) return 0;
+			const rate = (vacantArea / totalArea * 100).toFixed(1);
 			return rate;
 		},
 		handleImageError(e) {

@@ -46,7 +46,7 @@
 			<view class="card-title">详细信息</view>
 			<view class="info-item">
 				<text class="label">入驻面积：</text>
-				<text class="value">{{ projectData.OccupancyArea }}㎡</text>
+				<text class="value">{{ getOccupiedArea() }}㎡</text>
 			</view>
 			<view class="info-item">
 				<text class="label">可租面积：</text>
@@ -144,15 +144,32 @@ export default {
 		this.loadProjectDetail();
 	},
 	methods: {
-		// 计算空置面积：招租面积 - 入驻面积
-		getVacantArea() {
-			return this.projectData.LeasingArea - this.projectData.OccupancyArea;
+		// 计算入驻面积：所有入驻企业面积的总和
+		getOccupiedArea() {
+			if (!this.projectData.companies || this.projectData.companies.length === 0) {
+				return 0;
+			}
+			return this.projectData.companies.reduce((total, company) => {
+				return total + (Number(company.area) || 0);
+			}, 0);
 		},
-		// 计算空置率：空置面积 / 招租面积 * 100
+		// 计算可租面积：所有招租详情中空置面积的总和
+		getVacantArea() {
+			if (!this.projectData.rentalDetails || this.projectData.rentalDetails.length === 0) {
+				return 0;
+			}
+			return this.projectData.rentalDetails.reduce((total, rental) => {
+				return total + (Number(rental.vacantArea) || 0);
+			}, 0);
+		},
+		// 计算空置率：可租面积 / (入驻面积 + 可租面积) * 100
 		getVacancyRate() {
-			if (!this.projectData.LeasingArea || this.projectData.LeasingArea === 0) return 0;
+			const occupiedArea = this.getOccupiedArea();
 			const vacantArea = this.getVacantArea();
-			const rate = (vacantArea / this.projectData.LeasingArea * 100).toFixed(1);
+			const totalArea = occupiedArea + vacantArea;
+			
+			if (totalArea === 0) return 0;
+			const rate = (vacantArea / totalArea * 100).toFixed(1);
 			return rate;
 		},
 		checkLoginStatus() {
@@ -173,26 +190,27 @@ export default {
 					// 获取项目详情
 					const projectData = res.result.data.data[0];
 
-					// 确保数值字段为数字类型
-					projectData.LeasingArea = Number(projectData.LeasingArea) || 0;
-					projectData.OccupancyArea = Number(projectData.OccupancyArea) || 0;
+									// 确保数值字段为数字类型
+				projectData.LeasingArea = Number(projectData.LeasingArea) || 0;
+				// 注意：OccupancyArea 字段保留，但页面显示使用动态计算的入驻面积
+				projectData.OccupancyArea = Number(projectData.OccupancyArea) || 0;
 
-					// 处理企业数据
-					if (projectData.companies && projectData.companies.length) {
-						projectData.companies.forEach(company => {
-							company.area = Number(company.area) || 0;
-						});
-					}
+				// 处理企业数据 - 用于计算实际入驻面积
+				if (projectData.companies && projectData.companies.length) {
+					projectData.companies.forEach(company => {
+						company.area = Number(company.area) || 0;
+					});
+				}
 
-					// 处理价格数据
-					if (projectData.rentalDetails && projectData.rentalDetails.length) {
-						projectData.rentalDetails.forEach(price => {
-							// 租金已变为字符串类型，不需要转换，只处理空置面积
-							if (price.vacantArea) {
-								price.vacantArea = Number(price.vacantArea) || 0;
-							}
-						});
-					}
+				// 处理招租详情数据 - 用于计算实际可租面积
+				if (projectData.rentalDetails && projectData.rentalDetails.length) {
+					projectData.rentalDetails.forEach(rental => {
+						// 租金已变为字符串类型，不需要转换，只处理空置面积
+						if (rental.vacantArea) {
+							rental.vacantArea = Number(rental.vacantArea) || 0;
+						}
+					});
+				}
 
 					// 处理云存储图片URL
 					if (projectData.image && projectData.image.indexOf('cloud://') === 0) {
