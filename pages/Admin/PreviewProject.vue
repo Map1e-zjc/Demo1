@@ -78,10 +78,12 @@
 				<view class="company-header">
 					<text class="company-column name-col">企业名称</text>
 					<text class="company-column area-col">入驻面积</text>
+					<text class="company-column position-col">入驻位置</text>
 				</view>
 				<view class="company-row" v-for="(company, index) in projectData.companies" :key="index">
 					<text class="company-column name-col">{{ company.name }}</text>
 					<text class="company-column area-col highlight">{{ company.area }}㎡</text>
+					<text class="company-column position-col">{{ company.position }}</text>
 				</view>
 			</view>
 			<view class="no-data" v-if="!projectData.companies || projectData.companies.length === 0">暂无入驻企业</view>
@@ -355,13 +357,24 @@ export default {
 }
 
 .name-col {
-	width: 60%;
+	width: 40%;
 	text-align: left;
 	padding-left: 20rpx;
+	white-space: normal;
+	word-wrap: break-word;
+	word-break: break-all;
+	line-height: 1.4;
+	min-height: 56rpx;
 }
 
 .area-col {
-	width: 40%;
+	width: 25%;
+}
+
+.position-col {
+	width: 35%;
+	text-align: left;
+	padding-left: 15rpx;
 }
 
 .period-col {

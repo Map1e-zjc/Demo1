@@ -186,7 +186,7 @@ export default {
 				this.form.image
 			].every(field => !!field)
 			const companiesValid = this.form.companies.every(c =>
-				c.name?.trim() && !isNaN(c.area)
+				c.name?.trim() && !isNaN(c.area) && c.position?.trim()
 			);
 
 			const rentalValid = this.form.rentalDetails.every(d =>
@@ -246,8 +246,6 @@ export default {
 			// 初始化表单数据
 			this.form = { ...cleanData };
 
-			// 确保数值类型正确
-
 			// 确保企业数组至少有一项
 			if (!this.form.companies || this.form.companies.length === 0) {
 				this.form.companies = [{}];
@@ -268,7 +266,7 @@ export default {
 		},
 
 		addCompany() {
-			this.form.companies.push({ name: '', area: null });
+			this.form.companies.push({ name: '', area: null, position: '' });
 		},
 		removeCompany(index) {
 			this.form.companies.splice(index, 1);
@@ -316,7 +314,8 @@ export default {
 				this.form.accuratePosition.longitude = parseFloat(this.form.accuratePosition.longitude)
 				this.form.companies = this.form.companies.map(c => ({
 					name: c.name.trim(),
-					area: parseFloat(c.area)
+					area: parseFloat(c.area),
+					position: c.position?.trim() || ''
 				}));
 				this.form.rentalDetails = this.form.rentalDetails.map(d => ({
 					building: d.building.trim(),

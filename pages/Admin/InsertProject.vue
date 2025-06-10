@@ -119,7 +119,7 @@ export default {
         status: 'published',
         investmentStatus: '招租中',
         image: '',
-        companies: [{}],
+        companies: [{ name: '', area: null, position: '' }],
         rentalDetails: [{}],
       }
     }
@@ -162,7 +162,7 @@ export default {
   },
   methods: {
     addCompany() {
-      this.form.companies.push({ name: '', area: null });
+      this.form.companies.push({ name: '', area: null, position: '' });
     },
     removeCompany(index) {
       this.form.companies.splice(index, 1);
@@ -210,7 +210,8 @@ export default {
         this.form.accuratePosition.longitude = parseFloat(this.form.accuratePosition.longitude)
         this.form.companies = this.form.companies.map(c => ({
           name: c.name.trim(),
-          area: parseFloat(c.area)
+          area: parseFloat(c.area),
+          position: c.position?.trim() || ''
         }));
         this.form.rentalDetails = this.form.rentalDetails.map(d => ({
           building: d.building.trim(),
