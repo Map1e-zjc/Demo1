@@ -146,8 +146,6 @@ export default {
 					latitude: null
 				},
 				description: '',
-				LeasingArea: null,
-				OccupancyArea: null,
 				status: 'published',
 				investmentStatus: '',
 				image: '',
@@ -185,8 +183,6 @@ export default {
 				this.form.accuratePosition.longitude,
 				this.form.accuratePosition.latitude,
 				this.form.description,
-				this.form.LeasingArea,
-				this.form.OccupancyArea,
 				this.form.image
 			].every(field => !!field)
 			const companiesValid = this.form.companies.every(c =>
@@ -251,8 +247,6 @@ export default {
 			this.form = { ...cleanData };
 
 			// 确保数值类型正确
-			this.form.LeasingArea = Number(this.form.LeasingArea);
-			this.form.OccupancyArea = Number(this.form.OccupancyArea);
 
 			// 确保企业数组至少有一项
 			if (!this.form.companies || this.form.companies.length === 0) {
@@ -318,9 +312,6 @@ export default {
 		},
 		async handleSubmit() {
 			try {
-				// 数据类型转换
-				this.form.LeasingArea = parseFloat(this.form.LeasingArea)
-				this.form.OccupancyArea = parseFloat(this.form.OccupancyArea)
 				this.form.accuratePosition.latitude = parseFloat(this.form.accuratePosition.latitude)
 				this.form.accuratePosition.longitude = parseFloat(this.form.accuratePosition.longitude)
 				this.form.companies = this.form.companies.map(c => ({

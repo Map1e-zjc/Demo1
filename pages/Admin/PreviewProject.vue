@@ -2,13 +2,8 @@
 	<view class="detail-container">
 		<!-- 项目基本信息 -->
 		<view class="project-header">
-			<image 
-			  class="project-image" 
-			  :src="processedImageUrl" 
-			  mode="aspectFill"
-			  @error="handleImageError"
-			  :fade-show="false"
-			></image>
+			<image class="project-image" :src="processedImageUrl" mode="aspectFill" @error="handleImageError"
+				:fade-show="false"></image>
 			<view class="project-title">{{ projectData.name }}</view>
 		</view>
 
@@ -25,7 +20,7 @@
 			</view>
 			<view class="info-item">
 				<text class="label">招租面积：</text>
-				<text class="value">{{ getVacantArea() }}㎡</text>
+				<text class="value">{{ $projectUtils.getVacantArea(projectData.rentalDetails) }}㎡</text>
 			</view>
 		</view>
 
@@ -40,22 +35,23 @@
 			<view class="card-title">详细信息</view>
 			<view class="info-item">
 				<text class="label">入驻面积：</text>
-				<text class="value">{{ getOccupiedArea() }}㎡</text>
+				<text class="value">{{ $projectUtils.getOccupiedArea(projectData.companies) }}㎡</text>
 			</view>
 			<view class="info-item">
 				<text class="label">可租面积：</text>
-				<text class="value">{{ getVacantArea() }}㎡</text>
+				<text class="value">{{ $projectUtils.getVacantArea(projectData.rentalDetails) }}㎡</text>
 			</view>
 			<view class="info-item">
 				<text class="label">空置率：</text>
-				<text class="value">{{ getVacancyRate() }}%</text>
+				<text class="value">{{ $projectUtils.getVacancyRate(projectData.companies, projectData.rentalDetails) }}%</text>
 			</view>
 		</view>
 
 		<!-- 招租详情（仅登录用户可见）- 整合了租金和入驻企业信息 -->
-		<view class="info-card" v-if="isLogin && (projectData.rentalDetails && projectData.rentalDetails.length > 0 || projectData.companies && projectData.companies.length > 0)">
+		<view class="info-card"
+			v-if="isLogin && (projectData.rentalDetails && projectData.rentalDetails.length > 0 || projectData.companies && projectData.companies.length > 0)">
 			<view class="card-title">招租详情</view>
-			
+
 			<!-- 招租信息表格 -->
 			<view class="section-title" v-if="projectData.rentalDetails && projectData.rentalDetails.length > 0">招租信息</view>
 			<view class="rental-table" v-if="projectData.rentalDetails && projectData.rentalDetails.length > 0">
@@ -69,11 +65,12 @@
 					<text class="column building">{{ price.building || '-' }}</text>
 					<text class="column floor">{{ price.floor }}</text>
 					<text class="column area">{{ price.vacantArea }}㎡</text>
-					<text class="column price highlight">{{ price.rent === '面议' ? '面议' : (isNaN(parseFloat(price.rent)) ? price.rent : parseFloat(price.rent) + '元/㎡/月') }}</text>
+					<text class="column price highlight">{{ price.rent === '面议' ? '面议' : (isNaN(parseFloat(price.rent)) ?
+						price.rent : parseFloat(price.rent) + '元/㎡/月') }}</text>
 				</view>
 			</view>
 			<view class="no-data" v-if="!projectData.rentalDetails || projectData.rentalDetails.length === 0">暂无招租信息</view>
-			
+
 			<!-- 入驻企业信息列表 -->
 			<view class="section-divider"></view>
 			<view class="section-title" v-if="projectData.companies && projectData.companies.length > 0">入驻企业</view>
@@ -107,102 +104,55 @@ export default {
 	},
 	methods: {
 		async getData() {
-		  const previewData = uni.getStorageSync('Preview_data');
-		  
-		  if (!previewData) {
-		    console.error('未找到预览数据');
-		    this.projectData = {};
-		    return;
-		  }
-		  
-		  // 深拷贝避免数据污染
-		  this.projectData = JSON.parse(JSON.stringify(previewData));
-		  
-		  // 设置初始图片URL为空字符串
-		  this.processedImageUrl = '';
-		  
-		  // 处理图片路径
-		  await this.processImage();
-		  
-		  // 转换数字类型（防止模板报错）
-		  this.projectData.LeasingArea = Number(this.projectData.LeasingArea) || 0;
-		  // 注意：OccupancyArea 字段保留，但页面显示使用动态计算的入驻面积
-		  this.projectData.OccupancyArea = Number(this.projectData.OccupancyArea) || 0;
-		  
-		  // 处理企业数据 - 用于计算实际入驻面积
-		  if (this.projectData.companies && this.projectData.companies.length) {
-		    this.projectData.companies.forEach(company => {
-		      company.area = Number(company.area) || 0;
-		    });
-		  }
-		  
-		  // 处理招租详情数据 - 用于计算实际可租面积
-		  if (this.projectData.rentalDetails && this.projectData.rentalDetails.length) {
-		    this.projectData.rentalDetails.forEach(rental => {
-		      if (rental.vacantArea) {
-		        rental.vacantArea = Number(rental.vacantArea) || 0;
-		      }
-		    });
-		  }
+			const previewData = uni.getStorageSync('Preview_data');
+
+			if (!previewData) {
+				console.error('未找到预览数据');
+				this.projectData = {};
+				return;
+			}
+
+			// 深拷贝避免数据污染
+			this.projectData = JSON.parse(JSON.stringify(previewData));
+
+			// 设置初始图片URL为空字符串
+			this.processedImageUrl = '';
+
+			// 处理图片路径
+			await this.processImage();
+
 		},
-		
+
 		// 单独提取图片处理逻辑
 		async processImage() {
-		  // 如果没有图片，直接返回
-		  if (!this.projectData.image) {
-		    return;
-		  }
-		  
-		  // 如果用户已经上传过云存储文件
-		  if (this.projectData.image.indexOf('cloud://') === 0) {
-		    try {
-		      // 直接获取临时URL，不使用缓存
-		      const fileRes = await uniCloud.getTempFileURL({
-		        fileList: [this.projectData.image]
-		      });
-		
-		      if (fileRes.fileList && fileRes.fileList.length > 0) {
-		        this.processedImageUrl = fileRes.fileList[0].tempFileURL;
-		      }
-		    } catch (e) {
-		      console.error('获取图片URL失败:', e);
-		    }
-		  } else {
-		    // 非云存储路径，直接使用
-		    this.processedImageUrl = this.projectData.image;
-		  }
-		},
-		
-		// 计算入驻面积：所有入驻企业面积的总和
-		getOccupiedArea() {
-			if (!this.projectData.companies || this.projectData.companies.length === 0) {
-				return 0;
+			// 如果没有图片，直接返回
+			if (!this.projectData.image) {
+				return;
 			}
-			return this.projectData.companies.reduce((total, company) => {
-				return total + (Number(company.area) || 0);
-			}, 0);
-		},
-		// 计算可租面积：所有招租详情中空置面积的总和
-		getVacantArea() {
-			if (!this.projectData.rentalDetails || this.projectData.rentalDetails.length === 0) {
-				return 0;
+
+			// 如果用户已经上传过云存储文件
+			if (this.projectData.image.indexOf('cloud://') === 0) {
+				try {
+					// 直接获取临时URL，不使用缓存
+					const fileRes = await uniCloud.getTempFileURL({
+						fileList: [this.projectData.image]
+					});
+
+					if (fileRes.fileList && fileRes.fileList.length > 0) {
+						this.processedImageUrl = fileRes.fileList[0].tempFileURL;
+					}
+				} catch (e) {
+					console.error('获取图片URL失败:', e);
+				}
+			} else {
+				// 非云存储路径，直接使用
+				this.processedImageUrl = this.projectData.image;
 			}
-			return this.projectData.rentalDetails.reduce((total, rental) => {
-				return total + (Number(rental.vacantArea) || 0);
-			}, 0);
 		},
-		// 计算空置率：可租面积 / (入驻面积 + 可租面积) * 100
-		getVacancyRate() {
-			const occupiedArea = this.getOccupiedArea();
-			const vacantArea = this.getVacantArea();
-			const totalArea = occupiedArea + vacantArea;
-			
-			if (totalArea === 0) return 0;
-			const rate = (vacantArea / totalArea * 100).toFixed(1);
-			return rate;
-		},
+
+		
 		handleImageError(e) {
-		console.warn('图片加载失败:', e);
+			console.warn('图片加载失败:', e);
 		}
 	}
 }
@@ -336,7 +286,8 @@ export default {
 	margin-bottom: 20rpx;
 }
 
-.rental-header, .rental-item {
+.rental-header,
+.rental-item {
 	display: flex;
 	width: 100%;
 	border-bottom: 1rpx solid #eee;
@@ -381,7 +332,8 @@ export default {
 	margin-bottom: 20rpx;
 }
 
-.company-header, .company-row {
+.company-header,
+.company-row {
 	display: flex;
 	width: 100%;
 	border-bottom: 1rpx solid #eee;

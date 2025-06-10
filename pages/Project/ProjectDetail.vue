@@ -20,14 +20,14 @@
 			</view>
 			<view class="info-item">
 				<text class="label">招租面积：</text>
-				<text class="value">{{ projectData.LeasingArea }}㎡</text>
+				<text class="value">{{ $projectUtils.getTotalLeasingArea(projectData) }}㎡</text>
 			</view>
 		</view>
 
 		<!-- 项目介绍 -->
 		<view class="info-card">
 			<view class="card-title">项目介绍</view>
-			<view class="project-desc" :class="{'desc-expanded': isDescExpanded}">
+			<view class="project-desc" :class="{ 'desc-expanded': isDescExpanded }">
 				<template v-if="!isDescExpanded && projectData.description && projectData.description.length > 100">
 					{{ projectData.description.substring(0, 100) + '...' }}
 				</template>
@@ -35,7 +35,8 @@
 					{{ projectData.description }}
 				</template>
 			</view>
-			<view v-if="projectData.description && projectData.description.length > 100" class="desc-toggle" @click="toggleDescExpand">
+			<view v-if="projectData.description && projectData.description.length > 100" class="desc-toggle"
+				@click="toggleDescExpand">
 				{{ isDescExpanded ? '收起' : '展开全部' }}
 				<text class="toggle-icon">{{ isDescExpanded ? '↑' : '↓' }}</text>
 			</view>
@@ -46,15 +47,15 @@
 			<view class="card-title">详细信息</view>
 			<view class="info-item">
 				<text class="label">入驻面积：</text>
-				<text class="value">{{ getOccupiedArea() }}㎡</text>
+				<text class="value">{{ $projectUtils.getOccupiedArea(projectData.companies) }}㎡</text>
 			</view>
 			<view class="info-item">
 				<text class="label">可租面积：</text>
-				<text class="value">{{ getVacantArea() }}㎡</text>
+				<text class="value">{{ $projectUtils.getVacantArea(projectData.rentalDetails) }}㎡</text>
 			</view>
 			<view class="info-item">
 				<text class="label">空置率：</text>
-				<text class="value">{{ getVacancyRate() }}%</text>
+				<text class="value">{{ $projectUtils.getVacancyRate(projectData.companies, projectData.rentalDetails) }}%</text>
 			</view>
 		</view>
 
@@ -97,7 +98,7 @@
 			</view>
 			<view class="no-data" v-if="!projectData.companies || projectData.companies.length === 0">暂无入驻企业</view>
 		</view>
-		
+
 		<!-- 底部空白区域，用于增加间距 -->
 		<view class="bottom-spacing"></view>
 
@@ -144,34 +145,6 @@ export default {
 		this.loadProjectDetail();
 	},
 	methods: {
-		// 计算入驻面积：所有入驻企业面积的总和
-		getOccupiedArea() {
-			if (!this.projectData.companies || this.projectData.companies.length === 0) {
-				return 0;
-			}
-			return this.projectData.companies.reduce((total, company) => {
-				return total + (Number(company.area) || 0);
-			}, 0);
-		},
-		// 计算可租面积：所有招租详情中空置面积的总和
-		getVacantArea() {
-			if (!this.projectData.rentalDetails || this.projectData.rentalDetails.length === 0) {
-				return 0;
-			}
-			return this.projectData.rentalDetails.reduce((total, rental) => {
-				return total + (Number(rental.vacantArea) || 0);
-			}, 0);
-		},
-		// 计算空置率：可租面积 / (入驻面积 + 可租面积) * 100
-		getVacancyRate() {
-			const occupiedArea = this.getOccupiedArea();
-			const vacantArea = this.getVacantArea();
-			const totalArea = occupiedArea + vacantArea;
-			
-			if (totalArea === 0) return 0;
-			const rate = (vacantArea / totalArea * 100).toFixed(1);
-			return rate;
-		},
 		checkLoginStatus() {
 			const userData = uni.getStorageSync('User_data');
 			this.isLogin = userData && userData.account !== undefined;
@@ -189,28 +162,6 @@ export default {
 				if (res.result && res.result.code === 200 && res.result.data && res.result.data.data && res.result.data.data.length > 0) {
 					// 获取项目详情
 					const projectData = res.result.data.data[0];
-
-									// 确保数值字段为数字类型
-				projectData.LeasingArea = Number(projectData.LeasingArea) || 0;
-				// 注意：OccupancyArea 字段保留，但页面显示使用动态计算的入驻面积
-				projectData.OccupancyArea = Number(projectData.OccupancyArea) || 0;
-
-				// 处理企业数据 - 用于计算实际入驻面积
-				if (projectData.companies && projectData.companies.length) {
-					projectData.companies.forEach(company => {
-						company.area = Number(company.area) || 0;
-					});
-				}
-
-				// 处理招租详情数据 - 用于计算实际可租面积
-				if (projectData.rentalDetails && projectData.rentalDetails.length) {
-					projectData.rentalDetails.forEach(rental => {
-						// 租金已变为字符串类型，不需要转换，只处理空置面积
-						if (rental.vacantArea) {
-							rental.vacantArea = Number(rental.vacantArea) || 0;
-						}
-					});
-				}
 
 					// 处理云存储图片URL
 					if (projectData.image && projectData.image.indexOf('cloud://') === 0) {
@@ -296,7 +247,8 @@ export default {
 
 <style>
 .detail-container {
-	padding-bottom: 180rpx;  /* 增加底部内边距 */
+	padding-bottom: 180rpx;
+	/* 增加底部内边距 */
 	background-color: #f5f5f5;
 }
 
@@ -519,7 +471,8 @@ export default {
 }
 
 .bottom-spacing {
-	height: 50rpx;  /* 添加额外的底部间距元素 */
+	height: 50rpx;
+	/* 添加额外的底部间距元素 */
 }
 
 .nav-button-container {
@@ -530,7 +483,8 @@ export default {
 	padding: 20rpx;
 	background-color: #fff;
 	box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.1);
-	z-index: 100;  /* 确保按钮在最上层 */
+	z-index: 100;
+	/* 确保按钮在最上层 */
 }
 
 .button-row {

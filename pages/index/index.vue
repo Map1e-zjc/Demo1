@@ -127,7 +127,7 @@ export default {
             markersElement._id = project._id;
             markersElement.title = project.name;
             markersElement.callout.content = project.name;
-            markersElement.leasingArea = project.LeasingArea;
+            markersElement.leasingArea = this.$projectUtils.getTotalLeasingArea(project);
             markersElement.address = project.address;
             const latitude = project.accuratePosition.latitude;
             const longitude =  project.accuratePosition.longitude;

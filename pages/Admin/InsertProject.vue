@@ -116,8 +116,6 @@ export default {
           latitude: null
         },
         description: '',
-        LeasingArea: null,
-        OccupancyArea: null,
         status: 'published',
         investmentStatus: '招租中',
         image: '',
@@ -208,8 +206,6 @@ export default {
     },
     async handleSubmit() {
       try {
-        this.form.LeasingArea = parseFloat(this.form.LeasingArea)
-        this.form.OccupancyArea = parseFloat(this.form.OccupancyArea)
         this.form.accuratePosition.latitude = parseFloat(this.form.accuratePosition.latitude)
         this.form.accuratePosition.longitude = parseFloat(this.form.accuratePosition.longitude)
         this.form.companies = this.form.companies.map(c => ({

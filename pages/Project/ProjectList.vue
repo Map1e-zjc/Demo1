@@ -74,7 +74,7 @@
 					<view class="project-title">{{ item.name }}</view>
 					<view class="project-address">{{ item.district }} {{ item.street || '' }} {{ item.address }}</view>
 					<view class="project-data">
-						<text class="data-item">招租面积: {{ item.LeasingArea }}㎡</text>
+						<text class="data-item">招租面积: {{ $projectUtils.getTotalLeasingArea(item) }}㎡</text>
 					</view>
 					
 					<!-- 内部信息（登录可见） -->
@@ -86,15 +86,15 @@
 						</view>
 						<view class="company-info">
 							<text class="info-label">入驻面积：</text>
-							<text class="info-value">{{ item.OccupancyArea }}㎡</text>
+							<text class="info-value">{{ $projectUtils.getOccupiedArea(item.companies) }}㎡</text>
 						</view>
 						<view class="company-info">
 							<text class="info-label">可租面积：</text>
-							<text class="info-value">{{ getVacantArea(item) }}㎡</text>
+							<text class="info-value">{{ $projectUtils.getVacantArea(item.rentalDetails) }}㎡</text>
 						</view>
 						<view class="company-info">
 							<text class="info-label">空置率：</text>
-							<text class="info-value">{{ getVacancyRate(item) }}%</text>
+							<text class="info-value">{{ $projectUtils.getVacancyRate(item.companies, item.rentalDetails) }}%</text>
 						</view>
 						<view class="rent-info">
 							<text class="info-label">租金范围：</text>
@@ -187,17 +187,6 @@
 			uni.$off('projectUpdated');
 		},
 		methods: {
-			// 计算空置面积：招租面积 - 入驻面积
-			getVacantArea(item) {
-				return item.LeasingArea - item.OccupancyArea;
-			},
-			// 计算空置率：空置面积 / 招租面积 * 100
-			getVacancyRate(item) {
-				if (!item.LeasingArea || item.LeasingArea === 0) return 0;
-				const vacantArea = this.getVacantArea(item);
-				const rate = (vacantArea / item.LeasingArea * 100).toFixed(1);
-				return rate;
-			},
 			// 获取租金范围
 			getRentRange(item) {
 				if (!item.rentalDetails || item.rentalDetails.length === 0) return '暂无';
@@ -278,9 +267,8 @@
 						data: {
 							collectionName: 'Project_data',
 							query: {status: 'published'},
-							// 只查询需要的字段，添加street字段
 							options: {
-								fields: '_id,name,district,street,address,LeasingArea,companies,OccupancyArea,rentalDetails,image,investmentStatus'
+								fields: '_id,name,district,street,address,companies,rentalDetails,image,investmentStatus'
 							}
 						}
 					});
@@ -291,10 +279,6 @@
 						
 						// 处理图片URL和数据格式
 						for (const project of projects) {
-							// 确保数值字段为数字类型
-							project.LeasingArea = Number(project.LeasingArea) || 0;
-							project.OccupancyArea = Number(project.OccupancyArea) || 0;
-							
 							// 处理企业数据
 							if (project.companies && project.companies.length) {
 								project.companies.forEach(company => {
