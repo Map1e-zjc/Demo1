@@ -395,9 +395,11 @@ export default {
 	font-size: 26rpx;
 	text-align: center;
 	border-right: 1rpx solid #eee;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+	word-wrap: break-word;
+	word-break: break-all;
+	white-space: normal;
+	line-height: 1.4;
+	min-height: 56rpx;
 }
 
 .building {
@@ -441,20 +443,17 @@ export default {
 	font-size: 26rpx;
 	text-align: center;
 	border-right: 1rpx solid #eee;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+	word-wrap: break-word;
+	word-break: break-all;
+	white-space: normal;
+	line-height: 1.4;
+	min-height: 56rpx;
 }
 
 .name-col {
 	width: 40%;
 	text-align: left;
 	padding-left: 20rpx;
-	white-space: normal;
-	word-wrap: break-word;
-	word-break: break-all;
-	line-height: 1.4;
-	min-height: 56rpx;
 }
 
 .area-col {
