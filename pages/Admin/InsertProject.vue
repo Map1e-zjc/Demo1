@@ -194,8 +194,12 @@ export default {
       }
     },
     uploadPosition() {
+      // 拼接完整地址用于定位
+      const fullAddress = `${this.form.district}${this.form.street}${this.form.address}`;
+      
+      // 将地址信息传递给定位页面
       uni.navigateTo({
-        url: "/pages/Admin/Locate"
+        url: `/pages/Admin/Locate?address=${encodeURIComponent(fullAddress)}`
       })
     },
     ToPreview() {
