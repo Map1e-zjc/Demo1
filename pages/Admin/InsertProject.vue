@@ -58,7 +58,7 @@
         <view class="repeat-group" v-for="(detail, index) in form.rentalDetails" :key="index">
           <view class="repeat-header">
             <text>招租 {{ index + 1 }}</text>
-            <text v-if="form.companies.length > 1" @click="removeRental(index)"
+            <text v-if="form.rentalDetails.length > 1" @click="removeRental(index)"
               style="font-size: 24px; color: #ff4d4f;">×</text>
           </view>
           <text class="input-label">楼栋</text>
